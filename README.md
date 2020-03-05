@@ -48,7 +48,7 @@ Day 5
 | ------------------ | ---------------------------------- | ----------------------------- |
 | 08:00-09:00 | Registration | |
 | 09:00-09:30 | TIB2020 Inauguration  |  |
-| 09:30-10:00 | Welcome to CDSB: the history of our community and where we are going. Code of conduct review | [    |
+| 09:30-10:00 | Welcome to CDSB: the history of our community and where we are going. Code of conduct review |  _Instructor_  |
 | 10:00-10:30 |  | _Instructor_ |
 | 10:30-11:00 |  | _Instructor_ |
 | 11:00-11:30 | Coffee break | |
