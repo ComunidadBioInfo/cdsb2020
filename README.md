@@ -2,7 +2,7 @@ CDSB2020
 ========
 
 
-Welcome to the [CDSB2020] workshop page. The workshop is described in detail in both English and Spanish at [comunidadbioinfo.github.io](https://comunidadbioinfo.github.io/post/cdsb2020-building-workflows-with-rstudio-and-scrnaseq-with-bioconductor/). Note that this workshop will be taught only in English.
+Welcome to the **CDSB2020**! The workshop is described in detail in both English and Spanish at [comunidadbioinfo.github.io](https://comunidadbioinfo.github.io/post/cdsb2020-building-workflows-with-rstudio-and-scrnaseq-with-bioconductor/). Note that this workshop will be taught only in English.
 
 ## Program
 
