@@ -2,10 +2,10 @@ CDSB2020
 ========
 
 
-Welcome to the **CDSB2020**! The workshop is described in detail in English at [comunidadbioinfo.github.io](https://comunidadbioinfo.github.io/post/cdsb2020-building-workflows-with-rstudio-and-scrnaseq-with-bioconductor/). Note that this workshop will be taught only in Spanish.
+Welcome to the **CDSB2020**! The workshop is described in detail in English at [comunidadbioinfo.github.io](https://comunidadbioinfo.github.io/post/cdsb2020-building-workflows-with-rstudio-and-scrnaseq-with-bioconductor/). Note that this workshop will be taught only in Spanish. This workshop will be taught live on the central Mexico time zone. Check your local time by adding your city to [World Clock](https://www.timeanddate.com/worldclock/meetingtime.html?iso=20200803&p2=155).
 
 
-¡Bienvenid@s a **CDSB2020**! Este taller está descrito en detalle en español vía [comunidadbioinfo.github.io](https://comunidadbioinfo.github.io/es/post/cdsb2020-building-workflows-with-rstudio-and-scrnaseq-with-bioconductor/). Este taller será impartido solo en español.
+¡Bienvenid@s a **CDSB2020**! Este taller está descrito en detalle en español vía [comunidadbioinfo.github.io](https://comunidadbioinfo.github.io/es/post/cdsb2020-building-workflows-with-rstudio-and-scrnaseq-with-bioconductor/). Este taller será impartido solo en español. El taller será impartido bajo el horario central de Mexico. Agrega tu ciudad vía [World Clock](https://www.timeanddate.com/worldclock/meetingtime.html?iso=20200803&p2=155) para checar el uso horario en tu ciudad.
 
 ## Programa
 
