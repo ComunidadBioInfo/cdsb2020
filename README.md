@@ -59,8 +59,8 @@ Día 5
 
 | **Día 1: Agosto 3, 2020**  |      |      |
 | ------------------ | ---------------------------------- | ----------------------------- |
-| 07:30-09:00 | Ayuda con instalación de paquetes de R | |
-| 09:00-09:30 | Inauguración EMB2020  | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/) |
+| 07:30-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
+| 09:00-09:30 | Inauguración EBM2020  | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/) |
 | 09:30-10:00 | Bienvenida a la CDSB y revisión del código de conducta |  [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 10:00-10:30 | Introducciones de los participantes | |
 | 10:30-11:00 | Introducción al flujo de trabajo orientado a proyectos | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
@@ -71,6 +71,7 @@ Día 5
 | 15:30-16:30 | Paths seguros | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)|
 | 16:30-17:30 | ¿Qué nombre le doy a mi archivo? | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa) |
 | **Día 2: Agosto 4, 2020** |      |      |
+| 08:00-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
 | 09:00-11:00 | Uso de Git y GitHub | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/) |
 | 11:00-11:30 | Descanso | |
 | 11:30-12:30 | Modificando los archivos de inicio de R |[Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
@@ -78,6 +79,7 @@ Día 5
 | 14:00-15:30 | Descanso: comida | |
 | 15:30-17:30 | Debugging | _Instructor_ |
 | **Día 3: Agosto 5, 2020** |      |      |
+| 08:00-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
 | 09:00-10:30 | Buenas prácticas de configuración y mantenimiento de espacios de trabajo | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
 | 10:30-11:00 | Foto/video remoto | |
 | 11:00-11:30 | Descanso | |
@@ -87,6 +89,7 @@ Día 5
 | 15:30-17:00 | Actividades para construir la comunidad | |
 | 17:00-17:30 | Presentación del material para scRNA-seq | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | **Día 4:Agosto 6, 2020** |      |      |
+| 08:00-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
 | 09:00-10:00 | Introducción a scRNA-seq | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 10:00-11:00 | Introducción a scRNA-seq con Bioconductor | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 11:00-11:30 | Descanso | |
@@ -97,6 +100,7 @@ Día 5
 | 16:30-17:30 | Normalización de datos | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 19:00-21:00 | CDSB 2020: Evento social remoto | |
 | **Día 5: Agosto 7, 2020** |      |      |
+| 08:00-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
 | 09:00-10:00 | Selección de genes | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 10:00-11:00 | Reducción de dimensiones | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 11:00-11:30 | Descanso | |
