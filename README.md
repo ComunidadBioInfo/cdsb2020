@@ -75,9 +75,9 @@ Día 5
 | 09:00-11:00 | Uso de Git y GitHub | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/) |
 | 11:00-11:30 | Descanso | |
 | 11:30-12:30 | Modificando los archivos de inicio de R |[Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
-| 12:30-14:00 | Escritura y documentación de funciones | _Instructor_ |
+| 12:30-14:00 | Escritura y documentación de funciones | [Alejandro Reyes](http://comunidadbioinfo.github.io/authors/areyes/) |
 | 14:00-15:30 | Descanso: comida | |
-| 15:30-17:30 | Debugging | _Instructor_ |
+| 15:30-17:30 | Debugging | [Marcel Ramos Perez](http://comunidadbioinfo.github.io/authors/mramos/) |
 | **Día 3: Agosto 5, 2020** |      |      |
 | 08:00-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
 | 09:00-10:30 | Buenas prácticas de configuración y mantenimiento de espacios de trabajo | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
@@ -113,6 +113,8 @@ Día 5
 Instructores:
 
 * [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/)
+* [Alejandro Reyes](http://comunidadbioinfo.github.io/authors/areyes/)
 * [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf)
 * [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/)
+* [Marcel Ramos Perez](http://comunidadbioinfo.github.io/authors/mramos/)
 * [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)
