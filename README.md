@@ -118,3 +118,19 @@ Instructores:
 * [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/)
 * [Marcel Ramos Perez](http://comunidadbioinfo.github.io/authors/mramos/)
 * [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)
+
+**Pre-requisitos**
+
+* Instalar la última versión de R desde [CRAN](https://cran.r-project.org)
+* Instalar la última versión de [RStudio](https://rstudio.com/products/rstudio/download/)
+* Instalar los paquetes necesarios ejecutando este código:
+
+```
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+
+remotes::install_cran(
+  c("tidyverse", "devtools", "here", "fs", "cowsay")
+)
+```
