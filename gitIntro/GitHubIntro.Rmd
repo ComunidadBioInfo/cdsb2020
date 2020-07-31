@@ -1,0 +1,339 @@
+---
+title: "Introducción a GitHub para R"
+output: 
+  ioslides_presentation:
+    fig_width: 7
+    fig_height: 6
+---
+<style>
+p.caption {
+  font-size: 0.6em;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Agradecimientos
+
+- Este documento se basa en "Happy Git with R"
+https://happygitwithr.com
+
+
+## Por qué hacer control de versiones de nuestros proyectos?
+
+- Los proyectos suelen cambiar y crecer.
+- Es difícil saber cuáles fueron todos los cambios a lo largo del tiempo (en espacial tiempos largos, hazlo por tu yo del futuro!).
+- Las colaboraciones se pueden complicar sin un buen control de versiones.
+
+## Git
+
+- Git es un sistema de control de versiones.
+- Git funciona con GitHub, Bitbucket o GitLab
+- Por qué usar Git en vez de solo renombrar los archivos? Por que es mejor tener una filogenia del archivo
+```{r, fig.cap="Excuse me, do you have a moment to talk about version control?, Jennifer Bryan, 2017", out.width = '60%'}
+knitr::include_graphics('Figure1.png')
+```
+
+## Qué necesitamos para que esto funcione?
+
+- Necesitamos Git en la computadora
+- Necesitamos que Git le hable a GitHub (o el repositorio que quieran usar).
+- Luego necesitamos que R hable con este repositorio.
+
+
+## Recomendaciones para sus proyectos
+
+- Dedicar un directorio
+- Es mejor organizarlo en un RStudio Project
+- Hacer un repositorio de Git
+- Trabajen como siempre, solo además de guardar, recuerden hacer commit
+- De vez en vez hagan push de sus cambios cuando los hayan **verificado**.
+
+## Proyectos colaborativos
+
+- GitHub se parece más a un GoogleDoc que a un Word Document.
+- Es fácil que los colaboradores hagan cambios y también es fácil saber quién hizo que.
+- El owner del proyecto puede dar permisos a los diferentes colaboradores.
+- También existen organizaciones, esto puede ser útil para manejar los permisos de grupos grandes de colaboración.
+
+## Detalles especiales de GitHub
+
+- Issues: Issue reports, es fácil saber de dónde vino un reporte y si se arregló.
+- Pull requests: Los usuarios pueden solicitar contribuir y hacer cambios.
+
+## R in GitHub
+
+- La comunidad de R es muy activa en GitHub.
+- Hay muchos paquetes ahí.
+- Al ser parte de GitHub será más fácil que su código se utilice por la comunidad.
+- GitHub y RStudio se conectan muy bien.
+
+## Ahora, a darle!
+
+- Ya tenemos R y RStudio.
+- Necesitamos una cuenta en GitHub, registren una si no tienen.
+- Ahora vamos a: 
+  - Instalar Git
+  - Familiarizarnos con Gi
+  - Conectarnos a GitHub
+
+## Instalar Git
+
+- Primero, revisen, puede ser que ya lo tienen instalados
+
+```{bash eval=FALSE, echo=TRUE}
+which git
+git --version
+```
+
+- Si no lo tienen instalado:
+- MAC: Usen Xcode.
+- Linux: Usen apt-get o yum para instalar git
+
+## Ahora con GitHub!
+- Hagan login y creen un repositorio nuevo
+- Denle nombre: en mi caso use CDSB2020_minirepo
+- Añadan una descripción: My mini repo
+- Inicialicen el repositorio con un README
+- Para lo demás usen los defaults
+- Den Click en "Create repository"
+
+## Traer el repositorio a nuestras compus
+- Ya tenemos el repositorio en GitHub
+- Para de verdad poderlo usar, lo tenemos que traer a nuestras computadoras, Clonenlo!
+- Copien la liga en "Clone or download"
+
+```{bash eval=FALSE, echo=TRUE}
+git clone https://mylink.com/you/your_repo
+```
+
+## Usemos el repositorio!
+
+- Vamos a usar el repositorio como nuestro lugar de trabajo:
+
+```{bash eval=FALSE, echo=TRUE}
+cd myrepo
+ls
+head README.md
+git remote show origin
+
+```
+
+- Estamos en la master branch (rama maestra)
+
+## Usemos el repositorio!
+
+- Probemos haciendo un cambio en el README
+
+```{bash eval=FALSE, echo=TRUE}
+echo "Something I want to add to the README in my local computer" >> README.md
+git status
+```
+
+- Qué pasó?
+
+- Ahora tenemos que decirle a git que queremos seguir los cambios de ese archivo
+- Vamos a commit (hacer, encomendar) los cambios y luego a subir (push) los mismos a GitHub
+
+```{bash eval=FALSE, echo=TRUE}
+git add README.md
+git commit -m "A commit from my local computer"
+git push
+```
+
+## Usemos el repositorio!
+
+- Add es algo que se hace la primera vez que se usa un archivos. Con la opción -A se agregan todos los archivos. Piensen bien antes de hacer eso!!! a veces no queremos todos los archivos en un folder (tal vez no quieren agregar sus mil tests).
+- Usen mensajes INFORMATIVOS en los commits, pude ser información muy útil en el futuro.
+- Ahora verifica si los cambios se subieron a GitHub
+
+## Credenciales en Git
+
+- Algunas instalaciones de Git son muy listas y guardan el username y password, así que no lo tenemos que poner en cada push.
+- Si por algo no está funcionando
+
+Pueden seguir estos tutoriales para arreglarlo
+https://happygitwithr.com/credential-caching.html
+https://happygitwithr.com/ssh-keys.html
+
+## Conectando Git y RStudio
+- Hasta ahora todo lo de Git ha sido en línea de comando
+- Pero RStudio nos puede ayudar con esto
+- Para lograrlo, primero necesitamos que RStudio se conecte con Git
+1. Crea un proyecto en RStudio desde un repositorio de Git.
+File > New Project > Version Control > Git
+2. En dónde vas a guardar ese repositorio?
+3. Lo logramos! Git va a aparecer en la esquina superior derecha
+4. Hagamos un cambio en el README
+
+## Commit y push en RStudio
+Desde RStudio:
+
+- Da click en el “Git” tab el panel superior derecho.
+- Haz click en “Staged” para README.md.
+- Da click en “Commit”.
+- Escribe un mensaje útil en “Commit message”.
+- Click “Commit”.
+- Click "push"
+
+## Formas distintas de hacer repositorios en GitHub
+- Prooyecto nuevo, GitHub primero
+- Proyecto existente, GitHub primero
+- Proyecto existente, GitHub al final
+
+## Proyecto Nuevo, GitHub primero
+- Eso acabamos de hacer :D
+
+## Proyectos existentes, GitHub Primero
+
+- Imaginemos que tenemos un proyecto de R en nuestra computadoras
+- Lo bueno es que si tenemos, y varios. Tomen su favorito como ejemplo
+- Vayan a GitHub y creen un repositorio para guardar ese proyecto.
+- Clonen el repositorio usando RStudio (igual que antes, new project, from git...)
+
+## Proyectos existentes, GitHub Primero
+
+- Ahora muevan sus archivos a este proyecto, un simple mv de consola funciona
+- Hagan Stage a los archivos que si quieran en el repositorio (Quieren todos, quieren algunos?)
+- commit
+- push
+- done
+
+## Proyecto existente, GitHub al final
+
+- Tenemos un folder en algún lado con nuestro Rproject
+File > New Project > Existing Directory 
+
+- Ahora lo vamos a volver un repositorio de Git
+En RStudio, Tools > Project Options … > Git/SVN. En “Version control system”, seleccionen “Git”. Confirmen New Git Repository? Yes!
+- Stage y commit
+- Vayan a  GitHub y creen un nuevo proyecto con un nombre informativo. (Esta vez no inicializar con README!!)
+
+## Proyecto existente, GitHub al final
+- En RStudio:
+  - Click en los cuadritos morados con un rombo blanco en el panel de control del Git panel. 
+  - Click “Add remote”.
+  - Pegar URL aquí y elegir un nombre  (remote name), probablemente origin.
+  - “Add”. 
+  - Debemos haber vuelto al dialogo de “New Branch”, si no hay que volver usando los cuadritos morados y el rombo.
+  - Usen master como nombre de la rama (branch name) y seleccionen “Sync branch with remote”.
+  - Click “Create” (si, aun que exista ya). En el siguiente dialogo seleccionen “overwrite”. Listo!
+
+## Rmarkdown en GitHub
+
+- Creemos un Rmakrdown y subámoslo a GitHub
+- Ahora hay que agregarlo al repositorio (add), stage and commit.
+- Subieron el hmlt? Qué tal se ve?
+- No se ve como queremos, verdad? Para eso necesitamos recuperar el .md. El .md es un resultado intermedio de crear el html desde Rmd.
+- Tenemos que cambiar el header para esto
+
+```{r echo=TRUE, eval=FALSE}
+---
+title: "RmarkwondTest"
+output: 
+  html_document:
+    keep_md: true
+---
+```
+
+## Git basics: commands
+
+- Qué pasó?
+- Qué hacemos ahora?
+- Ahora ya tienes todo para subir tus cosas a GitHub y documentarlas bonito!
+
+## Git basics: Repository, diff
+
+- Un repository o repo es un grupo de archivos manejado por Git
+```{r, fig.cap="https://happygitwithr.com/git-basics.html", out.width = '60%'}
+knitr::include_graphics('Figure2.png')
+```
+
+## Git basics: commands
+- Clone
+```{bash eval=FALSE, echo=TRUE}
+git clone https://repor.com
+```
+
+- Agregar un archivo al repo (solo una vez) y hacer commit
+```{bash eval=FALSE, echo=TRUE}
+git add newfile.R
+git commit -m "mensaje informativo" newfile.R
+```
+## Git basics: commands
+
+- Qué pasó?
+```{bash eval=FALSE, echo=TRUE}
+git status
+git log
+git log --oneline
+```
+
+- Comparar versiones
+```{bash eval=FALSE, echo=TRUE}
+git diff
+git diff myfile.R
+```
+## Git basics: commands
+
+- Push
+```{bash eval=FALSE, echo=TRUE}
+git push
+```
+
+- Pull y pull evitando conflictos de merge (Fusión!)
+```{bash eval=FALSE, echo=TRUE}
+git pull
+git pull --ff-only
+```
+
+## Git basics: commands
+
+- Fetch Commits
+```{bash eval=FALSE, echo=TRUE}
+git fetch
+```
+
+- Create and Switch to a branch
+```{bash eval=FALSE, echo=TRUE}
+git branch [branch-name]
+git checkout [branch-name]
+```
+
+## Merge conflics
+- A veces, no tan a veces también, las cosas no salen bien a la primera
+- Merging (Fusionar) es una de esas cosas
+- Cuando bajamos un cambio o fusionamos branches esto puede pasar.
+- Primera regla: NO ENTRAR EN PANICO!!!
+- Revisen el status del repositorio. Qué archivo tiene conflicto?
+
+## Merge conflics
+
+- Abran ese archivo y busquen los problemas de merge. Es fácil, se ven así:
+
+```{r echo=TRUE, eval=FALSE}
+<<<<<<< HEAD:index.html
+<div id="footer">contact : email.support@github.com</div>
+=======
+<div id="footer">
+ please contact us at support@github.com
+</div>
+>>>>>>> issue-5:index.html
+```
+
+- Editen esa sección, dejen una versión final.
+- Hagan commit y push
+- Si entran en pánico? Aborten la misión! 
+
+```{bash eval=FALSE, echo=TRUE}
+git merge --abort t
+```
+
+## En resumen
+
+```{r, fig.cap="https://xkcd.com", out.width = '40%'}
+knitr::include_graphics('Figure3.png')
+```
