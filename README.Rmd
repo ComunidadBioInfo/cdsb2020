@@ -79,7 +79,7 @@ Día 5
 | ------------------ | ---------------------------------- | ----------------------------- | 
 | **Día 1: Agosto 3, 2020**  |     |      |      |
 | 07:30-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
-| 09:00-09:30 | Inauguración EBM2020  | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/) |
+| 09:00-09:30 | Inauguración EBM2020  | [Julio Collado Vides](https://www.ccg.unam.mx/pedro-julio-collado-vides/), [Christian Sohlenkamp](https://www.ccg.unam.mx/christian-sohlenkamp/), [Irma Martínez Flores](https://www.ccg.unam.mx/irma-martinez-flores/), [Shirley Alquicira Hernández](https://www.ccg.unam.mx/shirley-alquicira-hernandez/)  |
 | 09:30-10:00 | [Bienvenida a la CDSB y revisión del código de conducta](https://speakerdeck.com/lcolladotor/cdsb2020) |  [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 10:00-10:30 | Introducciones de los participantes | |
 | 10:30-11:00 | [Introducción al flujo de trabajo orientado a proyectos](presentaciones_flujos-de-trabajo/Introduccion-al-flujo-de-trabajo-orientado-a-proyectos.pdf) | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
