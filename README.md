@@ -248,3 +248,15 @@ Commons Attribution-NonCommercial-ShareAlike 4.0 International
 License</a>.
 
 <script type='text/javascript' id='clustrmaps' src='//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=300&t=n&d=rP3KLyAMuzVNcJFL-_C-B0XnLNVy8Sp6a8HDaKEnSzc'></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-137796972-1"></script>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-137796972-1');
+</script>
