@@ -219,9 +219,9 @@ BiocManager::install(
 
 ## Materiales
 
-Descarga los materiales del curso usando
-`usethis::use_course('comunidadbioinfo/cdsb2020')` o revisa los
-materiales en línea usando
+Descarga los materiales con
+`usethis::use_course('comunidadbioinfo/cdsb2020')` o revisalos en línea
+vía
 [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).
 
 ### General
@@ -236,16 +236,27 @@ materiales en línea usando
 ### Construyendo flujos de trabajo con RStudio
 
 1.  Flujo de trabajo orientado a proyectos
-2.  Uso de Git y GitHub
-3.  Modificando los archivos de inicio de R
-4.  [Escritura](https://github.com/ComunidadBioInfo/escribir_funciones)
+
+<!-- end list -->
+
+  - [Introducción al flujo de trabajo orientado a
+    proyectos](presentaciones_flujos-de-trabajo/Introduccion-al-flujo-de-trabajo-orientado-a-proyectos.pdf).
+  - [Trabajando con proyectos versus
+    scripts](presentaciones_flujos-de-trabajo/Trabajando-con-proyectos.pdf).
+
+<!-- end list -->
+
+1.  [Uso de Git y GitHub](gitIntro/GitHubIntro.html)
+2.  [Modificando los archivos de inicio de
+    R](presentaciones_flujos-de-trabajo/Configuracion-y-archivos-de-inicio.pdf)
+3.  [Escritura](https://github.com/ComunidadBioInfo/escribir_funciones)
     y
     [documentación](https://github.com/ComunidadBioInfo/documentar_funciones)
     de funciones
-5.  Debugging
-6.  Buenas prácticas de configuración y mantenimiento de espacios de
-    trabajo
-7.  Instalación de paqueterías desde código fuente
+4.  Debugging
+5.  \[Buenas prácticas de configuración y [mantenimiento de espacios de
+    trabajo](presentaciones_flujos-de-trabajo/Mantenimiento.pdf)
+6.  Instalación de paqueterías desde código fuente
 
 ### Bioconductor para datos transcriptómicos de célula única (scRNA-seq)
 

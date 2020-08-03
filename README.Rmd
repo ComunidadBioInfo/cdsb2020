@@ -202,7 +202,7 @@ BiocManager::install(
 
 ## Materiales
 
-Descarga los materiales del curso usando `usethis::use_course('comunidadbioinfo/cdsb2020')` o revisa los materiales en línea usando [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).
+Descarga los materiales con `usethis::use_course('comunidadbioinfo/cdsb2020')` o revisalos en línea vía [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).
 
 ### General
 
@@ -216,11 +216,13 @@ Descarga los materiales del curso usando `usethis::use_course('comunidadbioinfo/
 ### Construyendo flujos de trabajo con RStudio
 
 1. Flujo de trabajo orientado a proyectos
-1. Uso de Git y GitHub
-1. Modificando los archivos de inicio de R
+  - [Introducción al flujo de trabajo orientado a proyectos](presentaciones_flujos-de-trabajo/Introduccion-al-flujo-de-trabajo-orientado-a-proyectos.pdf).
+  - [Trabajando con proyectos versus scripts](presentaciones_flujos-de-trabajo/Trabajando-con-proyectos.pdf).
+1. [Uso de Git y GitHub](gitIntro/GitHubIntro.html)
+1. [Modificando los archivos de inicio de R](presentaciones_flujos-de-trabajo/Configuracion-y-archivos-de-inicio.pdf)
 1. [Escritura](https://github.com/ComunidadBioInfo/escribir_funciones) y [documentación](https://github.com/ComunidadBioInfo/documentar_funciones) de funciones
 1. Debugging
-1. Buenas prácticas de configuración y mantenimiento de espacios de trabajo
+1. [Buenas prácticas de configuración y [mantenimiento de espacios de trabajo](presentaciones_flujos-de-trabajo/Mantenimiento.pdf)
 1. Instalación de paqueterías desde código fuente
 
 
