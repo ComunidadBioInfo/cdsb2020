@@ -1,0 +1,247 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Taller CDSB 2020: Construyendo flujos de trabajo con RStudio y Bioconductor para datos transcriptómicos de célula única (scRNA-seq)
+
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+Welcome to the **CDSB2020**! The workshop is described in detail in English at [comunidadbioinfo.github.io](https://comunidadbioinfo.github.io/post/cdsb2020-building-workflows-with-rstudio-and-scrnaseq-with-bioconductor/). Note that this workshop will be taught only in Spanish. This workshop will be taught live on the central Mexico time zone. Check your local time by adding your city to [World Clock](https://www.timeanddate.com/worldclock/meetingtime.html?iso=20200803&p2=155).
+
+
+¡Bienvenid@s a **CDSB2020**! Este taller está descrito en detalle en español vía [comunidadbioinfo.github.io](https://comunidadbioinfo.github.io/es/post/cdsb2020-building-workflows-with-rstudio-and-scrnaseq-with-bioconductor/). Este taller será impartido solo en español. El taller será impartido bajo el horario central de Mexico. Agrega tu ciudad vía [World Clock](https://www.timeanddate.com/worldclock/meetingtime.html?iso=20200803&p2=155) para checar el uso horario en tu ciudad.
+
+## Programa
+
+**Ojo: la versión más actualizada del programa estará disponible solo vía el calendario de Google privado de la CDSB vía el cual los participantes registrados obtendrán las ligas de Zoom para el taller.**
+
+Día 1
+
+* Inauguración EMB2020
+* Bienvenida a la CDSB
+* Introducciones de los participantes
+* Flujo de trabajo orientado a proyectos:
+  - Introducción al flujo de trabajo orientado a proyectos.
+  - Trabajando con proyectos versus scripts.
+  - Generación de un proyecto.
+  - Paths seguros.
+  - ¿Qué nombre le doy a mi archivo?
+
+Día 2
+
+* Uso de Git y GitHub.
+* Modificando los archivos de inicio de R.
+* Escritura y documentación de funciones.
+* Debugging.
+
+Día 3
+
+* Buenas prácticas de configuración y mantenimiento de espacios de trabajo.
+* Foto / video remoto.
+* Instalación de paqueterías desde código fuente.
+* Visión general del procesamiento de datos de scRNA-seq
+* Actividades para construir la comunidad
+* Presentación del material para scRNA-seq
+
+Días 4 
+
+* Introducción a scRNA-seq
+* Introducción a scRNA-seq con Bioconductor
+* Estructura e importe de datos
+* Control de calidad
+* Normalización de datos
+
+Día 5
+
+* Selección de genes
+* Reducción de dimensiones
+* Clustering y detección de genes diferencialmente expresados
+* spatialLIBD: análisis de datos de la plataforma Visium de 10x Genomics
+* Evaluación del taller
+* Clausura y recordatorio de la CDSB
+
+| Horario  | Tema | Instructores |
+| ------------------ | ---------------------------------- | ----------------------------- | 
+| **Día 1: Agosto 3, 2020**  |     |      |      |
+| 07:30-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
+| 09:00-09:30 | Inauguración EBM2020  | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/) |
+| 09:30-10:00 | Bienvenida a la CDSB y revisión del código de conducta |  [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 10:00-10:30 | Introducciones de los participantes | |
+| 10:30-11:00 | Introducción al flujo de trabajo orientado a proyectos | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
+| 11:00-11:30 | Descanso | |
+| 11:30-13:00 | Trabajando con proyectos versus scripts | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
+| 13:00-14:00 | Generación de un proyecto | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
+| 14:00-15:30 | Descanso: comida | |
+| 15:30-16:30 | Paths seguros | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)|
+| 16:30-17:30 | ¿Qué nombre le doy a mi archivo? | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa) |
+| **Día 2: Agosto 4, 2020** |      |      |
+| 08:00-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
+| 09:00-11:00 | Uso de Git y GitHub | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/) |
+| 11:00-11:30 | Descanso | |
+| 11:30-12:30 | Modificando los archivos de inicio de R |[Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
+| 12:30-14:00 | [Escritura](https://github.com/ComunidadBioInfo/escribir_funciones) y [documentación](https://github.com/ComunidadBioInfo/documentar_funciones) de funciones | [Alejandro Reyes](http://comunidadbioinfo.github.io/authors/areyes/) |
+| 14:00-15:30 | Descanso: comida | |
+| 15:30-17:30 | Debugging | [Marcel Ramos Perez](http://comunidadbioinfo.github.io/authors/mramos/) |
+| **Día 3: Agosto 5, 2020** |      |      |
+| 08:00-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
+| 09:00-10:30 | Buenas prácticas de configuración y mantenimiento de espacios de trabajo | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
+| 10:30-11:00 | Foto/video remoto | |
+| 11:00-11:30 | Descanso | |
+| 11:30-12:30 | Instalación de paqueterías desde código fuente | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
+| 12:30-14:00 | Visión general del procesamiento de datos de scRNA-seq | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/) |
+| 14:00-15:30 | Descanso: comida | |
+| 15:30-17:00 | Actividades para construir la comunidad | |
+| 17:00-17:30 | Presentación del material para scRNA-seq | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| **Día 4:Agosto 6, 2020** |      |      |
+| 08:00-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
+| 09:00-10:00 | Introducción a scRNA-seq | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 10:00-11:00 | Introducción a scRNA-seq con Bioconductor | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 11:00-11:30 | Descanso | |
+| 11:30-13:00 | Estructura e importe de datos | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 13:00-14:00 | Control de calidad | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 14:00-15:30 | Descanso: comida | |
+| 15:30-16:30 | Control de calidad | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 16:30-17:30 | Normalización de datos | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 19:00-21:00 | CDSB 2020: Evento social remoto | |
+| **Día 5: Agosto 7, 2020** |      |      |
+| 08:00-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
+| 09:00-10:00 | Selección de genes | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 10:00-11:00 | Reducción de dimensiones | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 11:00-11:30 | Descanso | |
+| 11:30-13:00 | Clustering y detección de genes diferencialmente expresados | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 13:00-13:40 | spatialLIBD: análisis de datos de la plataforma Visium de 10x Genomics | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 13:45-14:00 | Evaluación del taller |  |
+| 14:00-14:30 | Clausura y recordatorio de la CDSB |      |
+
+
+Instructores:
+
+* [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/)
+* [Alejandro Reyes](http://comunidadbioinfo.github.io/authors/areyes/)
+* [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf)
+* [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/)
+* [Marcel Ramos Perez](http://comunidadbioinfo.github.io/authors/mramos/)
+* [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)
+
+## Código de conducta
+
+Les recordamos que este taller y la CDSB tiene un código de conducta: disponible [en inglés](https://comunidadbioinfo.github.io/codigo-de-conducta/) y en [español](https://comunidadbioinfo.github.io/es/codigo-de-conducta/).
+
+## Twitter
+
+En [lcolladotor.github.io/twitter-stats/CDSB2020](https://lcolladotor.github.io/twitter-stats/CDSB2020.html) pueden ver el análisis automático de los mensajes en Twitter que usen la etiqueta de `#CDSB2020`. 
+
+## Pre-requisitos
+
+* Instalar la última versión de R desde [CRAN](https://cran.r-project.org)
+* Instalar la última versión de [RStudio](https://rstudio.com/products/rstudio/download/)
+* Instalar los paquetes necesarios ejecutando este código:
+
+```
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+
+remotes::install_cran(
+  c("tidyverse", "devtools", "here", "fs", "cowsay")
+)
+```
+
+Para la segunda mitad del curso, necesitan instalar los siguientes paquetes de R (usando la versión más reciente de R)
+
+
+```r
+## Para instalar paquetes de Bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+## Install required packages
+BiocManager::install(
+    c(
+        'SingleCellExperiment',
+        'usethis',
+        'here',
+        'scran',
+        'scater',
+        'scRNAseq',
+        'org.Mm.eg.db',
+        'AnnotationHub',
+        'ExperimentHub',
+        'BiocFileCache',
+        'DropletUtils',
+        'EnsDb.Hsapiens.v86',
+        'TENxPBMCData',
+        'BiocSingular',
+        'batchelor',
+        'uwot',
+        'Rtsne',
+        'pheatmap',
+        'fossil',
+        'ggplot2',
+        'cowplot',
+        'RColorBrewer',
+        'plotly',
+        'iSEE',
+        'pryr',
+        'LieberInstitute/spatialLIBD',
+        'sessioninfo'
+    )
+)
+```
+
+## Materiales
+
+Descarga los materiales del curso usando `usethis::use_course('comunidadbioinfo/cdsb2020')` o revisa los materiales en línea usando [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).
+
+### General
+
+1. Inauguración EMB2020
+1. Bienvenida a la CDSB
+1. Foto / video remoto
+1. Actividades para construir la comunidad
+1. Evaluación del taller
+1. Clausura y recordatorio de la CDSB
+
+### Construyendo flujos de trabajo con RStudio
+
+1. Flujo de trabajo orientado a proyectos
+1. Uso de Git y GitHub
+1. Modificando los archivos de inicio de R
+1. [Escritura](https://github.com/ComunidadBioInfo/escribir_funciones) y [documentación](https://github.com/ComunidadBioInfo/documentar_funciones) de funciones
+1. Debugging
+1. Buenas prácticas de configuración y mantenimiento de espacios de trabajo
+1. Instalación de paqueterías desde código fuente
+
+
+### Bioconductor para datos transcriptómicos de célula única (scRNA-seq)
+
+1. Visión general del procesamiento de datos de scRNA-seq
+1. Introducción a scRNA-seq
+1. [Introducción a scRNA-seq con Bioconductor](scRNAseq/01-introduction.html)
+1. [Estructura e importe de datos](scRNAseq/02-data-infrastructure-and-import.html)
+1. [Control de calidad](scRNAseq/03-quality-control.html)
+1. [Normalización de datos](scRNAseq/04-normalization.html)
+1. [Selección de genes](scRNAseq/05-feature-selection.html)
+1. [Reducción de dimensiones](scRNAseq/06-dimensionality-reduction.html)
+1. [Clustering](scRNAseq/07-clustering.html)
+1. [Detección de genes diferencialmente expresados](scRNAseq/08-marker-gene-detection.html)
+1. [Spatial Transcriptomics: análisis de datos de la plataforma Visium de 10x Genomics con `spatialLIBD`](scRNAseq/12-spatial-transcriptomics.html)
+
+## License / Licencia
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+
+
+<script type='text/javascript' id='clustrmaps' src='//cdn.clustrmaps.com/map_v2.js?cl=ffffff&w=300&t=n&d=rP3KLyAMuzVNcJFL-_C-B0XnLNVy8Sp6a8HDaKEnSzc'></script>
