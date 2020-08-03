@@ -76,6 +76,8 @@ Día 5
   - Evaluación del taller
   - Clausura y recordatorio de la CDSB
 
+## Horario
+
 | Horario                   | Tema                                                                                                                                                         | Instructores                                                                   |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
 | **Día 1: Agosto 3, 2020** |                                                                                                                                                              |                                                                                |
@@ -129,7 +131,7 @@ Día 5
 | 13:45-14:00               | Evaluación del taller                                                                                                                                        |                                                                                |
 | 14:00-14:30               | Clausura y recordatorio de la CDSB                                                                                                                           |                                                                                |
 
-Instructores:
+## Instructores
 
   - [Alejandra
     Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/)
@@ -142,6 +144,12 @@ Instructores:
     Perez](http://comunidadbioinfo.github.io/authors/mramos/)
   - [Maria Teresa
     Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)
+
+### Ayudantes
+
+  - [Ana Betty Villaseñor Altamirano](https://twitter.com/AnaBetty2304)
+  - [Aurora Labastida](https://twitter.com/alabasti1)
+  - [Carlos Gabriel Aguilar Pérez](https://twitter.com/Carlos_Aplysia)
 
 ## Código de conducta
 
@@ -211,7 +219,7 @@ BiocManager::install(
         'plotly',
         'iSEE',
         'pryr',
-        'LieberInstitute/spatialLIBD',
+        'spatialLIBD',
         'sessioninfo'
     )
 )
@@ -223,6 +231,13 @@ Descarga los materiales con
 `usethis::use_course('comunidadbioinfo/cdsb2020')` o revisalos en línea
 vía
 [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).
+
+## Zoom
+
+Las ligas de Zoom están disponibles exclusivamente para lxs
+participantes de CDSB2020 vía un calendario de Google. Te enviamos una
+invitación al correo electrónico que usaste para registrate. Tienes que
+aceptar la invitación. Cualquier duda, contáctanos vía Slack. ¡Gracias\!
 
 ## License / Licencia
 
