@@ -87,7 +87,7 @@ Día 5
 | 11:30-13:00 | [Trabajando con proyectos versus scripts](presentaciones_flujos-de-trabajo/Trabajando-con-proyectos.pdf) | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
 | 13:00-14:00 | Generación de un proyecto | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
 | 14:00-15:30 | Descanso: comida | |
-| 15:30-16:30 | Paths seguros | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)|
+| 15:30-16:30 | [Paths seguros](https://docs.google.com/presentation/d/1URnxggAMXH7Kf6KWqXHDanJnVbhMa6VqdBBfFUjW1eI/edit) | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)|
 | 16:30-17:30 | ¿Qué nombre le doy a mi archivo? | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa) |
 | **Día 2: Agosto 4, 2020** |      |      |
 | 08:00-09:00 | (opcional) Ayuda con instalación de paquetes de R | |
