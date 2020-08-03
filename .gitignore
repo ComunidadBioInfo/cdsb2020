@@ -2,3 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rapp.history
+*/.Rhistory
+*/.Rapp.history
+scRNAseq/*_cache
