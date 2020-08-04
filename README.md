@@ -179,13 +179,26 @@ etiqueta de `#CDSB2020`.
 
 <!-- end list -->
 
-    if (!requireNamespace("remotes", quietly = TRUE)) {
-      install.packages("remotes")
-    }
+``` r
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+
+remotes::install_cran(
+  c("tidyverse", "devtools", "here", "fs", "cowsay")
+)
+
+## Para instalar paquetes de Bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
     
-    remotes::install_cran(
-      c("tidyverse", "devtools", "here", "fs", "cowsay")
-    )
+## Para funciones y como documentarlas con Alejandro Reyes
+BiocManager::install("BiocStyle")
+
+remotes::install_cran(
+  c("devtools", "roxygen2")
+)
+```
 
 Para la segunda mitad del curso, necesitan instalar los siguientes
 paquetes de R (usando la versión más reciente de R)

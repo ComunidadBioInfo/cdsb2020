@@ -160,13 +160,24 @@ En [lcolladotor.github.io/twitter-stats/CDSB2020](https://lcolladotor.github.io/
 * Instalar la última versión de [RStudio](https://rstudio.com/products/rstudio/download/)
 * Instalar los paquetes necesarios ejecutando este código:
 
-```
+```r
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
 
 remotes::install_cran(
   c("tidyverse", "devtools", "here", "fs", "cowsay")
+)
+
+## Para instalar paquetes de Bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    
+## Para funciones y como documentarlas con Alejandro Reyes
+BiocManager::install("BiocStyle")
+
+remotes::install_cran(
+  c("devtools", "roxygen2")
 )
 ```
 
