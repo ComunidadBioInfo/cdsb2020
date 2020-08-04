@@ -222,7 +222,8 @@ BiocManager::install(
         'iSEE',
         'pryr',
         'spatialLIBD',
-        'sessioninfo'
+        'sessioninfo',
+        'scPipe'
     )
 )
 ```
