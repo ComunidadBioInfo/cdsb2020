@@ -1,0 +1,434 @@
+---
+title: "**Introducción**"
+subtitle: "**Bioconductor** para datos transcriptómicos de célula única (**scRNA-seq**) -- **CDSB2020**"  
+author: "[Leonardo Collado-Torres](http://lcolladotor.github.io/)"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    includes:
+      in_header:
+        - 'gtag.js'
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+```{r xaringan-themer, include=FALSE}
+library(xaringanthemer)
+solarized_dark(
+  code_font_family = "Fira Code",
+  code_font_url    = "https://cdn.rawgit.com/tonsky/FiraCode/1.204/distr/fira_code.css"
+)
+```
+
+class: inverse
+
+.center[
+
+<a href="https://osca.bioconductor.org/"><img src="https://raw.githubusercontent.com/Bioconductor/OrchestratingSingleCellAnalysis-release/master/images/cover.png" style="width: 30%"/></a>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+<a href='https://clustrmaps.com/site/1b5pl'  title='Visit tracker'><img src='//clustrmaps.com/map_v2.png?cl=ffffff&w=150&t=n&d=rP3KLyAMuzVNcJFL-_C-B0XnLNVy8Sp6a8HDaKEnSzc'/></a>
+
+]
+
+.footnote[ Download the materials for this course with `usethis::use_course('comunidadbioinfo/cdsb2020')` or view online at [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).]
+
+```{css, echo = FALSE}
+/* From https://github.com/yihui/xaringan/issues/147  */
+.scroll-output {
+  height: 80%;
+  overflow-y: scroll;
+}
+
+/* https://stackoverflow.com/questions/50919104/horizontally-scrollable-output-on-xaringan-slides */
+pre {
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
+/* From https://github.com/yihui/xaringan/wiki/Font-Size */
+.tiny{
+  font-size: 40%
+}
+
+/* From https://github.com/yihui/xaringan/wiki/Title-slide */
+.title-slide {
+  background-image: url(https://raw.githubusercontent.com/Bioconductor/OrchestratingSingleCellAnalysis/master/images/Workflow.png);
+  background-size: 33%;
+  background-position: 0% 100%
+}
+```
+
+---
+
+# Orígenes del curso
+
+--
+
+* El libro [**Orchestrating Single Cell Analysis With Bioconductor**](ohttps://osca.bioconductor.org/) escrito por [Aaron Lun](https://www.linkedin.com/in/aaron-lun-869b5894/), [Robert Amezquita](https://robertamezquita.github.io/), [Stephanie Hicks](https://www.stephaniehicks.com/) y [Raphael Gottardo](http://rglab.org)
+
+--
+
+Amezquita, R.A., Lun, A.T.L., Becht, E. et al. Orchestrating single-cell analysis with Bioconductor. _Nat Methods_ 17, 137–145 (2020). DOI: [10.1038/s41592-019-0654-x](https://doi.org/10.1038/s41592-019-0654-x)
+
+--
+
+* [**Curso de scRNA-seq de WEHI**](https://drive.google.com/drive/folders/1cn5d-Ey7-kkMiex8-74qxvxtCQT6o72h) creado por [Peter Hickey](https://www.peterhickey.org/)
+
+---
+
+class: center, middle
+
+# Instructor
+
+
+
+
+**Leonardo Collado-Torres**
+
+
+<img src="http://lcolladotor.github.io/authors/admin/avatar_hub730ffb954e879fe0ab174cacb839b41_1326712_270x270_fill_lanczos_center_2.png" />
+
+* Sitio web: [lcolladotor.github.io](http://lcolladotor.github.io)
+* Twitter: [fellgernon](https://twitter.com/fellgernon)
+
+---
+
+background-image: url(img/01-intro/Slide1.png)
+background-size: 100%
+
+---
+
+background-image: url(img/01-intro/Slide2.png)
+background-size: 100%
+
+---
+
+background-image: url(img/01-intro/Slide3.png)
+background-size: 100%
+
+---
+
+background-image: url(img/01-intro/Slide4.png)
+background-size: 100%
+
+---
+
+# Pre-requisitos
+
+.scroll-output[
+
+Instala R 4.0.x desde [CRAN](https://cran.r-project.org/) y luego instala los siguientes paquetes de R:
+
+```{r install, eval = FALSE}
+## Para instalar paquetes de Bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+## Instala los paquetes de R que necesitamos
+BiocManager::install(
+    c(
+        'SingleCellExperiment',
+        'usethis',
+        'here',
+        'scran',
+        'scater',
+        'scRNAseq',
+        'org.Mm.eg.db',
+        'AnnotationHub',
+        'ExperimentHub',
+        'BiocFileCache',
+        'DropletUtils',
+        'EnsDb.Hsapiens.v86',
+        'TENxPBMCData',
+        'BiocSingular',
+        'batchelor',
+        'uwot',
+        'Rtsne',
+        'pheatmap',
+        'fossil',
+        'ggplot2',
+        'cowplot',
+        'RColorBrewer',
+        'plotly',
+        'iSEE',
+        'pryr',
+        'spatialLIBD',
+        'sessioninfo'
+    )
+)
+```
+
+Tabmién debes instalar [RStudio](https://rstudio.com/products/rstudio/download/#download) versión 1.3.1 o la más nueva de preferencia.
+
+]
+
+
+
+---
+
+# Ayudantes del curso
+
+* [Ana Betty Villaseñor Altamirano](https://twitter.com/AnaBetty2304)
+
+* [Aurora Labastida](https://twitter.com/alabasti1)
+
+* [Carlos Gabriel Aguilar Pérez](https://twitter.com/Carlos_Aplysia)
+
+
+
+
+---
+
+
+
+# Materiales del curso
+
+--
+
+* Descargalos con `usethis::use_course('comunidadbioinfo/cdsb2020')`
+
+--
+
+* Checalos en línea a través de [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020)
+
+--
+
+* **Clone** el repositorio de GitHub, lo cual te hará más fácil el poder actualizar tus archivos con la versión más reciente usando *git pull*
+
+```{bash clone_course, eval = FALSE}
+## Si tienes las llaves de SSH configuradas
+git clone git@github.com:comunidadbioinfo/cdsb2020.git
+
+## o vía https
+git clone https://github.com/comunidadbioinfo/cdsb2020.git
+```
+
+Desde R:
+
+```{r clone_repo, eval = FALSE}
+git2r::clone('https://github.com/comunidadbioinfo/cdsb2020',
+    'csdb2020')
+```
+
+---
+
+# Crea tu propio proyecto
+
+Te recomiendo que crees tu propio proyecto y actives el control de versiones
+
+```{r proj, eval = FALSE}
+usethis::create_project('~/Desktop/cdsb2020_leo')
+```
+
+```{r create_setup, eval = FALSE}
+## Crea un archivo de setup
+usethis::use_r('00-setup.R')
+```
+
+---
+
+En este script de setup, guarda los siguientes comandos
+
+```{r use_git, eval = FALSE}
+## Crea el repositorio de Git
+usethis::use_git()
+
+## Utiliza GitHub
+usethis::browse_github_token()
+usethis::edit_r_environ() ## y después reinicia R
+usethis::use_github() ## crea un commit, luego corre este comando
+
+## Empieza tus notas sobre la introducción a scRNA-seq
+usethis::use_r('01-introduction.R')
+```
+
+Ve el ejemplo en [**cdsb2020_leo**](https://github.com/lcolladotor/cdsb2020_leo)
+
+---
+
+# Pedir ayuda
+
+--
+
+* Usa la manita azul de Zoom: "raise your **hand**"
+
+--
+
+* Crea un **issue** en [cdsb2020](https://github.com/comunidadbioinfo/cdsb2020/issues). ¡Acuérdate de incluir un ejemplo reproducible!
+
+--
+
+* De forma más general, a través del [**Bioconductor Support Website**](https://support.bioconductor.org/) etiquetando el paquete de R relacionado.
+
+--
+
+* Algunos blog posts relacionados: [**How to ask for help for Bioconductor packages**](http://lcolladotor.github.io/2017/03/06/how-to-ask-for-help-for-bioconductor-packages/#.XnjLRNNKh0s), [**Asking for help is challenging but is typically worth it**](http://lcolladotor.github.io/2018/11/12/asking-for-help-is-challenging-but-is-typically-worth-it/#.XnjLf9NKh0s), y [**Learning from our search history**](http://lcolladotor.github.io/2020/02/12/learning-from-our-search-history/)
+
+--
+
+* La plática de [Jenny Bryan](https://twitter.com/JennyBryan) para `rstudio::conf(2020)`: [**Object of type ‘closure’ is not subsettable**](https://resources.rstudio.com/rstudio-conf-2020/object-of-type-closure-is-not-subsettable-jenny-bryan) 
+
+---
+
+background-image: url(https://raw.githubusercontent.com/Bioconductor/OrchestratingSingleCellAnalysis-release/master/images/cover.png)
+background-size: contain
+
+---
+
+background-image: url(https://raw.githubusercontent.com/Bioconductor/OrchestratingSingleCellAnalysis-release/master/images/SingleCellExperiment.png)
+background-size: contain
+
+---
+
+background-image: url(https://raw.githubusercontent.com/Bioconductor/OrchestratingSingleCellAnalysis-release/master/images/Workflow.png)
+background-size: contain
+
+
+---
+
+background-image: url(http://research.libd.org/spatialLIBD/reference/figures/README-access_data-1.png)
+background-size: contain
+
+---
+
+# Introdución rápida: [OSCA](https://osca.bioconductor.org/overview.html#quick-start)
+
+
+```{r 'quick_intro_01', message = FALSE}
+library('scRNAseq')
+library('scater')
+library('scran')
+library('plotly')
+```
+
+---
+
+.scroll-output[
+
+```{r 'quick_intro_02', cache = TRUE}
+sce <- scRNAseq::MacoskoRetinaData()
+
+## ¿Qué tan grandes son los datos?
+pryr::object_size(sce)
+
+## ¿Cómo es el objeto?
+sce
+```
+
+]
+
+---
+
+.scroll-output[
+
+```{r 'quick_intro_03', cache = TRUE}
+# Control de calidad.
+es.mito <- grepl("^MT-", rownames(sce))
+qcstats <-
+    scater::perCellQCMetrics(sce, subsets = list(Mito = es.mito))
+filtered <-
+    scater::quickPerCellQC(qcstats, percent_subsets = "subsets_Mito_percent")
+sce <- sce[, !filtered$discard]
+
+# Normalización.
+sce <- scater::logNormCounts(sce)
+
+# Selección de genes.
+dec <- scran::modelGeneVar(sce)
+hvg <- scran::getTopHVGs(dec, prop = 0.1)
+
+# Reducción de dimensiones.
+set.seed(1234)
+sce <- scater::runPCA(sce, ncomponents = 25, subset_row = hvg)
+sce <- scater::runUMAP(sce, dimred = 'PCA', external_neighbors = TRUE)
+
+# Clustering.
+g <- scran::buildSNNGraph(sce, use.dimred = 'PCA')
+sce$clusters <- factor(igraph::cluster_louvain(g)$membership)
+```
+
+]
+
+
+---
+
+```{r 'quick_intro_04'}
+# Visualización.
+scater::plotUMAP(sce, colour_by = "clusters")
+```
+
+---
+
+```{r 'quick_intro_05', eval = FALSE}
+# Visualización interactiva.
+p <- scater::plotUMAP(sce, colour_by = "clusters")
+plotly::ggplotly(p)
+```
+
+```{r 'quick_intro_06', eval = FALSE, echo = FALSE}
+# De https://github.com/rstudio/htmltools/issues/90
+p <- scater::plotUMAP(sce, colour_by = "clusters")
+pi <- plotly::ggplotly(p)
+f <- '01-introduction_files/figure-html/quick_intro_06.html'
+htmlwidgets::saveWidget(pi, here::here(f))
+htmltools::tags$iframe(
+    src = f,
+    width = "100%",
+    height = "400",
+    scrolling = "no",
+    seamless = "seamless",
+    frameBorder = "0"
+)
+```
+
+
+
+
+
+---
+
+class: middle
+
+.center[
+
+# ¡Gracias!
+
+Las diapositivias fueron hechas con el paquete de R [**xaringan**](https://github.com/yihui/xaringan) y configuradas con [**xaringanthemer**](https://github.com/gadenbuie/xaringanthemer).
+
+Este curso está basado en el libro [**Orchestrating Single Cell Analysis with Bioconductor**](https://osca.bioconductor.org/) de [Aaron Lun](https://www.linkedin.com/in/aaron-lun-869b5894/), [Robert Amezquita](https://robertamezquita.github.io/), [Stephanie Hicks](https://www.stephaniehicks.com/) y [Raphael Gottardo](http://rglab.org), además del [**curso de scRNA-seq para WEHI**](https://drive.google.com/drive/folders/1cn5d-Ey7-kkMiex8-74qxvxtCQT6o72h) creado por [Peter Hickey](https://www.peterhickey.org/).
+
+Puedes encontrar los archivos para este taller en  [comunidadbioinfo/cdsb2020](https://github.com/comunidadbioinfo/cdsb2020). 
+
+Instructor: [**Leonardo Collado-Torres**](http://lcolladotor.github.io/).
+
+<a href="https://www.libd.org"><img src="img/LIBD_logo.jpg" style="width: 20%" /></a>
+
+]
+
+.footnote[Descarga los materiales con `usethis::use_course('comunidadbioinfo/cdsb2020')` o revisalos en línea vía [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).]
+
+---
+
+# Detalles de la sesión de R
+
+
+.scroll-output[
+.tiny[
+
+```{r 'reproducibility', cache = TRUE, dependson=knitr::all_labels()}
+options(width = 120)
+sessioninfo::session_info()
+```
+
+
+]]
