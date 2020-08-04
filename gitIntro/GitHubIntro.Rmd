@@ -180,7 +180,7 @@ Desde RStudio:
 - Click "push"
 
 ## Formas distintas de hacer repositorios en GitHub
-- Prooyecto nuevo, GitHub primero
+- Proyecto nuevo, GitHub primero
 - Proyecto existente, GitHub primero
 - Proyecto existente, GitHub al final
 
@@ -210,17 +210,20 @@ File > New Project > Existing Directory
 - Ahora lo vamos a volver un repositorio de Git
 En RStudio, Tools > Project Options … > Git/SVN. En “Version control system”, seleccionen “Git”. Confirmen New Git Repository? Yes!
 - Stage y commit
-- Vayan a  GitHub y creen un nuevo proyecto con un nombre informativo. (Esta vez no inicializar con README!!)
+- Vayan a  GitHub y creen un nuevo proyecto con un nombre informativo, de preferencia el mismo que ya usaron en su proyecto. 
+(Esta vez no inicializar con README!!)
 
 ## Proyecto existente, GitHub al final
 - En RStudio:
   - Click en los cuadritos morados con un rombo blanco en el panel de control del Git panel. 
-  - Click “Add remote”.
-  - Pegar URL aquí y elegir un nombre  (remote name), probablemente origin.
-  - “Add”. 
+  - Se va a abrir el planel "New branch". 
+  - Directamente dar Click en “Add remote”.
+  - Pegar URL aquí (mover cursor para habilitar "Add") y elegir un nombre  (remote name), probablemente **origin**.
+  - Click “Add”. 
   - Debemos haber vuelto al dialogo de “New Branch”, si no hay que volver usando los cuadritos morados y el rombo.
-  - Usen master como nombre de la rama (branch name) y seleccionen “Sync branch with remote”.
-  - Click “Create” (si, aun que exista ya). En el siguiente dialogo seleccionen “overwrite”. Listo!
+  - Escribir **master** como nombre de la rama (branch name) en esta ventana y seleccionen “Sync branch with remote”.
+  - Click “Create” (si, aun que exista ya). En el siguiente dialogo seleccionen **overwrite**. 
+  - Listo!
 
 ## Rmarkdown en GitHub
 
