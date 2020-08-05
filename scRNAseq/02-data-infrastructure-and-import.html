@@ -4,7 +4,7 @@
     <title>Estructura e importe de datos</title>
     <meta charset="utf-8" />
     <meta name="author" content="Leonardo Collado-Torres" />
-    <meta name="date" content="2020-08-03" />
+    <meta name="date" content="2020-08-04" />
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-137796972-1"></script>
     <script>
@@ -23,7 +23,7 @@ class: center, middle, inverse, title-slide
 # <strong>Estructura e importe de datos</strong>
 ## <strong>Bioconductor</strong> para datos transcriptómicos de célula única (<strong>scRNA-seq</strong>) – <strong>CDSB2020</strong>
 ### <a href="http://lcolladotor.github.io/">Leonardo Collado-Torres</a>
-### 2020-08-03
+### 2020-08-04
 
 ---
 
@@ -88,134 +88,6 @@ Ve las diapositivas [aquí](https://docs.google.com/presentation/d/1X9qP3wNlnn3B
 
 ```r
 library('scRNAseq')
-```
-
-```
-## Loading required package: SingleCellExperiment
-```
-
-```
-## Loading required package: SummarizedExperiment
-```
-
-```
-## Loading required package: GenomicRanges
-```
-
-```
-## Loading required package: stats4
-```
-
-```
-## Loading required package: BiocGenerics
-```
-
-```
-## Loading required package: parallel
-```
-
-```
-## 
-## Attaching package: 'BiocGenerics'
-```
-
-```
-## The following objects are masked from 'package:parallel':
-## 
-##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
-##     clusterExport, clusterMap, parApply, parCapply, parLapply,
-##     parLapplyLB, parRapply, parSapply, parSapplyLB
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     IQR, mad, sd, var, xtabs
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     anyDuplicated, append, as.data.frame, basename, cbind, colnames,
-##     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
-##     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
-##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-##     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
-##     union, unique, unsplit, which, which.max, which.min
-```
-
-```
-## Loading required package: S4Vectors
-```
-
-```
-## 
-## Attaching package: 'S4Vectors'
-```
-
-```
-## The following object is masked from 'package:base':
-## 
-##     expand.grid
-```
-
-```
-## Loading required package: IRanges
-```
-
-```
-## Loading required package: GenomeInfoDb
-```
-
-```
-## Loading required package: Biobase
-```
-
-```
-## Welcome to Bioconductor
-## 
-##     Vignettes contain introductory material; view with
-##     'browseVignettes()'. To cite Bioconductor, see
-##     'citation("Biobase")', and for packages 'citation("pkgname")'.
-```
-
-```
-## Loading required package: DelayedArray
-```
-
-```
-## Loading required package: matrixStats
-```
-
-```
-## 
-## Attaching package: 'matrixStats'
-```
-
-```
-## The following objects are masked from 'package:Biobase':
-## 
-##     anyMissing, rowMedians
-```
-
-```
-## 
-## Attaching package: 'DelayedArray'
-```
-
-```
-## The following objects are masked from 'package:matrixStats':
-## 
-##     colMaxs, colMins, colRanges, rowMaxs, rowMins, rowRanges
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     aperm, apply, rowsum
-```
-
-```r
 sce.416b &lt;- LunSpikeInData(which = "416b")
 ```
 
@@ -255,14 +127,10 @@ sce.416b &lt;- LunSpikeInData(which = "416b")
 ## loading from cache
 ```
 
-```
-## require("ensembldb")
-```
-
 ```r
 # Carga el paquete SingleCellExperiment
 library('SingleCellExperiment')
-# Extrae la matri de cuentas del set de datos de 416b
+# Extrae la matriz de cuentas del set de datos de 416b
 counts.416b &lt;- counts(sce.416b)
 # Construye un nuevo SCE de la matriz de cuentas
 sce &lt;- SingleCellExperiment(assays = list(counts = counts.416b))
@@ -862,28 +730,6 @@ pryr::object_size(sce)
 # Descarga los archivos de anotación de la base de datos de Ensembl
 # correspondientes usando los recursos disponibles vía AnnotationHub
 library('AnnotationHub')
-```
-
-```
-## Loading required package: BiocFileCache
-```
-
-```
-## Loading required package: dbplyr
-```
-
-```
-## 
-## Attaching package: 'AnnotationHub'
-```
-
-```
-## The following object is masked from 'package:Biobase':
-## 
-##     cache
-```
-
-```r
 ah &lt;- AnnotationHub()
 ```
 
@@ -1052,13 +898,13 @@ reducedDim(sce, "PCA")[1:6, 1:3]
 ```
 
 ```
-##                                             PC1        PC2        PC3
-## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1 -18.717668 -27.598132  -5.939654
-## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1  -2.480705 -27.564583  -4.916567
-## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1 -42.034018  -7.552435 -12.126964
-## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1   8.494303  31.833727 -15.760853
-## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1  49.737390   4.226795  -6.123169
-## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1  44.528081  -3.215503 -10.384939
+##                                             PC1        PC2       PC3
+## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1 -18.717668 -27.598132  5.939654
+## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1  -2.480705 -27.564583  4.916567
+## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1 -42.034018  -7.552435 12.126964
+## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1   8.494303  31.833727 15.760853
+## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1  49.737390   4.226795  6.123169
+## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1  44.528081  -3.215503 10.384939
 ```
 
 ```r
@@ -1092,13 +938,13 @@ head(reducedDim(sce, "TSNE"))
 ```
 
 ```
-##                                            [,1]       [,2]
-## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1 -2.7028537  3.5476567
-## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1  0.3129274  3.6713880
-## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1 -4.8678015  3.8895476
-## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1 -6.2166641 -0.4182544
-## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1  7.7299815 -6.8930995
-## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1  7.8651624 -5.6281644
+##                                            [,1]      [,2]
+## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1  5.7709901  2.894348
+## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1 -0.7696283  1.759943
+## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1  6.3715234  4.444638
+## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1  4.5001480 -0.697168
+## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1 -5.6695234 -6.797328
+## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1 -6.9533606 -6.374509
 ```
 
 ```r
@@ -1116,12 +962,12 @@ head(reducedDim(sce, "UMAP"))
 
 ```
 ##                                            [,1]      [,2]
-## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1 -3.3553753 -1.279362
-## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1 -1.8222609 -1.946711
-## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1 -2.9103179 -1.693708
-## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1 -0.5815108 -1.400860
-## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1  0.1392121 -1.934622
-## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1 -0.2003901 -1.579205
+## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1 -0.8775856 -3.353889
+## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1 -0.6025560 -1.917092
+## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1 -1.2132465 -3.298013
+## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1  0.8394168 -1.990511
+## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1  1.7126780 -1.390049
+## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1  1.1901539 -1.794322
 ```
 
 ```r
@@ -1696,7 +1542,7 @@ sessioninfo::session_info()
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       America/New_York            
-##  date     2020-08-03                  
+##  date     2020-08-04                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  package                * version  date       lib source                            
@@ -1808,6 +1654,7 @@ sessioninfo::session_info()
 ##  Rsamtools                2.4.0    2020-04-27 [1] Bioconductor                      
 ##  RSpectra                 0.16-0   2019-12-01 [1] CRAN (R 4.0.0)                    
 ##  RSQLite                  2.2.0    2020-01-07 [1] CRAN (R 4.0.0)                    
+##  rstudioapi               0.11     2020-02-07 [1] CRAN (R 4.0.0)                    
 ##  rsvd                     1.0.3    2020-02-17 [1] CRAN (R 4.0.0)                    
 ##  rtracklayer              1.48.0   2020-04-27 [1] Bioconductor                      
 ##  Rtsne                    0.15     2018-11-10 [1] CRAN (R 4.0.2)                    
