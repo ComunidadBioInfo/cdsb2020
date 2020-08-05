@@ -1,8 +1,8 @@
-## ----setup, include=FALSE--------------------------------------------------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------------------
 options(htmltools.dir.version = FALSE)
 
 
-## ----xaringan-themer, include=FALSE----------------------------------------------------------------------------------
+## ----xaringan-themer, include=FALSE-------------------------------------------------------
 library(xaringanthemer)
 solarized_dark(
   code_font_family = "Fira Code",
@@ -54,7 +54,7 @@ solarized_dark(
 ## }
 
 
-## ----'reproducibility', cache = TRUE, dependson=knitr::all_labels()--------------------------------------------------
+## ----'reproducibility', cache = TRUE, dependson=knitr::all_labels()-----------------------
 options(width = 120)
 sessioninfo::session_info()
 
