@@ -76,9 +76,11 @@ Día 5
   - Evaluación del taller
   - Clausura y recordatorio de la CDSB
 
-## Horario
+## Bienvenida a la CDSB y revisión del código de conducta
 
 <script async class="speakerdeck-embed" data-id="1747a6072c204f33839148fba20f69ee" data-ratio="1.77777777777778" src="//speakerdeck.com/assets/embed.js"></script>
+
+## Horario
 
 | Horario                   | Tema                                                                                                                                                         | Instructores                                                                                                                                                                                                                                                                                                 |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -92,8 +94,8 @@ Día 5
 | 11:30-13:00               | [Trabajando con proyectos versus scripts](presentaciones_flujos-de-trabajo/Trabajando-con-proyectos.pdf)                                                     | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf)                                                                                                                                                                                                                                      |
 | 13:00-14:00               | Generación de un proyecto                                                                                                                                    | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf)                                                                                                                                                                                                                                      |
 | 14:00-15:30               | Descanso: comida                                                                                                                                             |                                                                                                                                                                                                                                                                                                              |
-| 15:30-16:30               | Paths seguros                                                                                                                                                | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)                                                                                                                                                                                                                                      |
-| 16:30-17:30               | ¿Qué nombre le doy a mi archivo?                                                                                                                             | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)                                                                                                                                                                                                                                      |
+| 15:30-16:30               | [Paths seguros](https://docs.google.com/presentation/d/1URnxggAMXH7Kf6KWqXHDanJnVbhMa6VqdBBfFUjW1eI/edit)                                                    | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)                                                                                                                                                                                                                                      |
+| 16:30-17:30               | [¿Qué nombre le doy a mi archivo?](https://docs.google.com/presentation/d/1URnxggAMXH7Kf6KWqXHDanJnVbhMa6VqdBBfFUjW1eI/edit)                                 | [Maria Teresa Ortiz](http://comunidadbioinfo.github.io/authors/mteresa)                                                                                                                                                                                                                                      |
 | **Día 2: Agosto 4, 2020** |                                                                                                                                                              |                                                                                                                                                                                                                                                                                                              |
 | 08:00-09:00               | (opcional) Ayuda con instalación de paquetes de R                                                                                                            |                                                                                                                                                                                                                                                                                                              |
 | 09:00-11:00               | [Uso de Git y GitHub](gitIntro/GitHubIntro.html)                                                                                                             | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/)                                                                                                                                                                                                                                |
@@ -101,7 +103,7 @@ Día 5
 | 11:30-12:30               | [Modificando los archivos de inicio de R](presentaciones_flujos-de-trabajo/Configuracion-y-archivos-de-inicio.pdf)                                           | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf)                                                                                                                                                                                                                                      |
 | 12:30-14:00               | [Escritura](https://github.com/ComunidadBioInfo/escribir_funciones) y [documentación](https://github.com/ComunidadBioInfo/documentar_funciones) de funciones | [Alejandro Reyes](http://comunidadbioinfo.github.io/authors/areyes/)                                                                                                                                                                                                                                         |
 | 14:00-15:30               | Descanso: comida                                                                                                                                             |                                                                                                                                                                                                                                                                                                              |
-| 15:30-17:30               | Debugging                                                                                                                                                    | [Marcel Ramos Perez](http://comunidadbioinfo.github.io/authors/mramos/)                                                                                                                                                                                                                                      |
+| 15:30-17:30               | [Debugging](http://tinyurl.com/cdsb2020test)                                                                                                                 | [Marcel Ramos Perez](http://comunidadbioinfo.github.io/authors/mramos/)                                                                                                                                                                                                                                      |
 | **Día 3: Agosto 5, 2020** |                                                                                                                                                              |                                                                                                                                                                                                                                                                                                              |
 | 08:00-09:00               | (opcional) Ayuda con instalación de paquetes de R                                                                                                            |                                                                                                                                                                                                                                                                                                              |
 | 09:00-10:30               | [Buenas prácticas de configuración y mantenimiento de espacios de trabajo](presentaciones_flujos-de-trabajo/Mantenimiento.pdf)                               | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf)                                                                                                                                                                                                                                      |
@@ -114,8 +116,8 @@ Día 5
 | 17:00-17:30               | [Presentación del material para scRNA-seq](scRNAseq/01-introduction.html)                                                                                    | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/)                                                                                                                                                                                                                               |
 | **Día 4:Agosto 6, 2020**  |                                                                                                                                                              |                                                                                                                                                                                                                                                                                                              |
 | 08:00-09:00               | (opcional) Ayuda con instalación de paquetes de R                                                                                                            |                                                                                                                                                                                                                                                                                                              |
-| 09:00-10:00               | Introducción a scRNA-seq                                                                                                                                     | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/)                                                                                                                                                                                                                               |
-| 10:00-11:00               | [Introducción a scRNA-seq con Bioconductor](scRNAseq/01-introduction.html)                                                                                   | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/)                                                                                                                                                                                                                               |
+| 09:00-10:00               | [Introducción a scRNA-seq con Bioconductor](scRNAseq/01-introduction.html)                                                                                   | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/)                                                                                                                                                                                                                               |
+| 10:00-11:00               | [Estructura e importe de datos](scRNAseq/02-data-infrastructure-and-import.html)                                                                             | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/)                                                                                                                                                                                                                               |
 | 11:00-11:30               | Descanso                                                                                                                                                     |                                                                                                                                                                                                                                                                                                              |
 | 11:30-13:00               | [Estructura e importe de datos](scRNAseq/02-data-infrastructure-and-import.html)                                                                             | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/)                                                                                                                                                                                                                               |
 | 13:00-14:00               | [Control de calidad](scRNAseq/03-quality-control.html)                                                                                                       | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/)                                                                                                                                                                                                                               |
@@ -177,13 +179,26 @@ etiqueta de `#CDSB2020`.
 
 <!-- end list -->
 
-    if (!requireNamespace("remotes", quietly = TRUE)) {
-      install.packages("remotes")
-    }
+``` r
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+
+remotes::install_cran(
+  c("tidyverse", "devtools", "here", "fs", "cowsay")
+)
+
+## Para instalar paquetes de Bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
     
-    remotes::install_cran(
-      c("tidyverse", "devtools", "here", "fs", "cowsay")
-    )
+## Para funciones y como documentarlas con Alejandro Reyes
+BiocManager::install("BiocStyle")
+
+remotes::install_cran(
+  c("devtools", "roxygen2")
+)
+```
 
 Para la segunda mitad del curso, necesitan instalar los siguientes
 paquetes de R (usando la versión más reciente de R)
@@ -222,7 +237,8 @@ BiocManager::install(
         'iSEE',
         'pryr',
         'spatialLIBD',
-        'sessioninfo'
+        'sessioninfo',
+        'scPipe'
     )
 )
 ```
