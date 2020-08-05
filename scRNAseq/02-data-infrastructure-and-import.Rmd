@@ -87,7 +87,7 @@ sce.416b <- LunSpikeInData(which = "416b")
 
 # Carga el paquete SingleCellExperiment
 library('SingleCellExperiment')
-# Extrae la matri de cuentas del set de datos de 416b
+# Extrae la matriz de cuentas del set de datos de 416b
 counts.416b <- counts(sce.416b)
 # Construye un nuevo SCE de la matriz de cuentas
 sce <- SingleCellExperiment(assays = list(counts = counts.416b))
