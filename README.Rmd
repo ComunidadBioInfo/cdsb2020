@@ -104,7 +104,7 @@ Día 5
 | 10:30-11:00 | Foto/video remoto | |
 | 11:00-11:30 | Descanso | |
 | 11:30-12:30 | [Instalación de paqueterías desde código fuente](presentaciones_flujos-de-trabajo/Instalacion-desde-la-fuente.pdf) | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf) |
-| 12:30-14:00 | Visión general del procesamiento de datos de scRNA-seq | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/) |
+| 12:30-14:00 | [Visión general del procesamiento de datos de scRNA-seq](scRNAseq/Single_cell_RNA-seq.pdf) | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/) |
 | 14:00-15:30 | Descanso: comida | |
 | 15:30-17:00 | Actividades para construir la comunidad | |
 | 17:00-17:30 | [Presentación del material para scRNA-seq](scRNAseq/01-introduction.html) | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
