@@ -1,0 +1,114 @@
+---
+title: "**Reducción de dimensiones	**"
+subtitle: "**Bioconductor** para datos transcriptómicos de célula única (**scRNA-seq**) -- **CDSB2020**"  
+author: "[Leonardo Collado-Torres](http://lcolladotor.github.io/)"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    includes:
+      in_header:
+        - 'gtag.js'
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+```{r xaringan-themer, include=FALSE}
+library(xaringanthemer)
+solarized_dark(
+  code_font_family = "Fira Code",
+  code_font_url    = "https://cdn.rawgit.com/tonsky/FiraCode/1.204/distr/fira_code.css"
+)
+```
+
+class: inverse
+
+.center[
+
+<a href="https://osca.bioconductor.org/"><img src="https://raw.githubusercontent.com/Bioconductor/OrchestratingSingleCellAnalysis-release/master/images/cover.png" style="width: 30%"/></a>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+
+<a href='https://clustrmaps.com/site/1b5pl'  title='Visit tracker'><img src='//clustrmaps.com/map_v2.png?cl=ffffff&w=150&t=n&d=rP3KLyAMuzVNcJFL-_C-B0XnLNVy8Sp6a8HDaKEnSzc'/></a>
+
+]
+
+.footnote[Descarga los materiales con `usethis::use_course('comunidadbioinfo/cdsb2020')` o revisalos en línea vía [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).]
+
+```{css, echo = FALSE}
+/* From https://github.com/yihui/xaringan/issues/147  */
+.scroll-output {
+  height: 80%;
+  overflow-y: scroll;
+}
+
+/* https://stackoverflow.com/questions/50919104/horizontally-scrollable-output-on-xaringan-slides */
+pre {
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
+/* From https://github.com/yihui/xaringan/wiki/Font-Size */
+.tiny{
+  font-size: 40%
+}
+
+/* From https://github.com/yihui/xaringan/wiki/Title-slide */
+.title-slide {
+  background-image: url(https://raw.githubusercontent.com/Bioconductor/OrchestratingSingleCellAnalysis/master/images/Workflow.png);
+  background-size: 33%;
+  background-position: 0% 100%
+}
+```
+
+---
+
+# Diapositivas de Peter Hickey
+
+Ve las diapositivas [aquí](https://docs.google.com/presentation/d/12CjvQ1beZVeCcMQqD6ptzd9YUHbHOksvy3lt_rvWyRs/edit)
+
+
+---
+
+class: middle
+
+.center[
+
+# ¡Gracias!
+
+Las diapositivias fueron hechas con el paquete de R [**xaringan**](https://github.com/yihui/xaringan) y configuradas con [**xaringanthemer**](https://github.com/gadenbuie/xaringanthemer).
+
+Este curso está basado en el libro [**Orchestrating Single Cell Analysis with Bioconductor**](https://osca.bioconductor.org/) de [Aaron Lun](https://www.linkedin.com/in/aaron-lun-869b5894/), [Robert Amezquita](https://robertamezquita.github.io/), [Stephanie Hicks](https://www.stephaniehicks.com/) y [Raphael Gottardo](http://rglab.org), además del [**curso de scRNA-seq para WEHI**](https://drive.google.com/drive/folders/1cn5d-Ey7-kkMiex8-74qxvxtCQT6o72h) creado por [Peter Hickey](https://www.peterhickey.org/).
+
+Puedes encontrar los archivos para este taller en  [comunidadbioinfo/cdsb2020](https://github.com/comunidadbioinfo/cdsb2020). 
+
+Instructor: [**Leonardo Collado-Torres**](http://lcolladotor.github.io/).
+
+<a href="https://www.libd.org"><img src="img/LIBD_logo.jpg" style="width: 20%" /></a>
+
+]
+
+.footnote[Descarga los materiales con `usethis::use_course('comunidadbioinfo/cdsb2020')` o revisalos en línea vía [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).]
+
+---
+
+# Detalles de la sesión de R
+
+
+.scroll-output[
+.tiny[
+
+```{r 'reproducibility', cache = TRUE, dependson=knitr::all_labels()}
+options(width = 120)
+sessioninfo::session_info()
+```
+
+
+]]

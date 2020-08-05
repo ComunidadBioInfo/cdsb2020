@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Control de calidad</title>
+    <title>Normalización de datos</title>
     <meta charset="utf-8" />
     <meta name="author" content="Leonardo Collado-Torres" />
     <meta name="date" content="2020-08-05" />
@@ -20,7 +20,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# <strong>Control de calidad</strong>
+# <strong>Normalización de datos</strong>
 ## <strong>Bioconductor</strong> para datos transcriptómicos de célula única (<strong>scRNA-seq</strong>) – <strong>CDSB2020</strong>
 ### <a href="http://lcolladotor.github.io/">Leonardo Collado-Torres</a>
 ### 2020-08-05
@@ -76,7 +76,7 @@ pre {
 
 # Diapositivas de Peter Hickey
 
-Ve las diapositivas [aquí](https://docs.google.com/presentation/d/1pIiA7fZd1GBxaKQpzT2sPn7C6fIZxEJ8NI4p3UtoIOo/edit#slide=id.p)
+Ve las diapositivas [aquí](https://docs.google.com/presentation/d/1_tCNLiEsQ_TgsqHHf9_1lzXSaM_LunEHxBq3k130dQI/edit#slide=id.g7cc450648d_0_118)
 
 ---
 
@@ -86,7 +86,6 @@ Ve las diapositivas [aquí](https://docs.google.com/presentation/d/1pIiA7fZd1GBx
 
 
 ```r
-## Datos
 library('scRNAseq')
 ```
 
@@ -216,7 +215,7 @@ library('scRNAseq')
 ```
 
 ```r
-sce.416b &lt;- LunSpikeInData(which = "416b")
+sce.zeisel &lt;- ZeiselBrainData(ensembl = TRUE)
 ```
 
 ```
@@ -241,6 +240,26 @@ sce.416b &lt;- LunSpikeInData(which = "416b")
 
 ```
 ## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
+```
+
+```
+## loading from cache
+```
+
+```
+## snapshotDate(): 2020-04-27
+```
+
+```
+## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
+```
+
+```
+## downloading 1 resources
+```
+
+```
+## retrieving 1 resource
 ```
 
 ```
@@ -259,91 +278,12 @@ sce.416b &lt;- LunSpikeInData(which = "416b")
 ## require("ensembldb")
 ```
 
-```r
-sce.416b$block &lt;- factor(sce.416b$block)
-
-# Descarga los archivos de anotación de la base de datos de Ensembl
-# correspondientes usando los recursos disponibles vía AnnotationHub
-library('AnnotationHub')
 ```
-
-```
-## Loading required package: BiocFileCache
-```
-
-```
-## Loading required package: dbplyr
-```
-
-```
-## 
-## Attaching package: 'AnnotationHub'
-```
-
-```
-## The following object is masked from 'package:Biobase':
-## 
-##     cache
+## Warning: Unable to map 1565 of 20006 requested IDs.
 ```
 
 ```r
-ah &lt;- AnnotationHub()
-```
-
-```
-## snapshotDate(): 2020-04-27
-```
-
-```r
-query(ah, c("Mus musculus", "Ensembl", "v97"))
-```
-
-```
-## AnnotationHub with 1 record
-## # snapshotDate(): 2020-04-27
-## # names(): AH73905
-## # $dataprovider: Ensembl
-## # $species: Mus musculus
-## # $rdataclass: EnsDb
-## # $rdatadateadded: 2019-05-02
-## # $title: Ensembl 97 EnsDb for Mus musculus
-## # $description: Gene and protein annotations for Mus musculus based on Ensem...
-## # $taxonomyid: 10090
-## # $genome: GRCm38
-## # $sourcetype: ensembl
-## # $sourceurl: http://www.ensembl.org
-## # $sourcesize: NA
-## # $tags: c("97", "AHEnsDbs", "Annotation", "EnsDb", "Ensembl", "Gene",
-## #   "Protein", "Transcript") 
-## # retrieve record with 'object[["AH73905"]]'
-```
-
-```r
-# Obtén la posición del cromosoma para cada gen
-ens.mm.v97 &lt;- ah[["AH73905"]]
-```
-
-```
-## loading from cache
-```
-
-```r
-location &lt;- mapIds(
-    ens.mm.v97,
-    keys = rownames(sce.416b),
-    keytype = "GENEID",
-    column = "SEQNAME"
-)
-```
-
-```
-## Warning: Unable to map 563 of 46604 requested IDs.
-```
-
-```r
-# Identifica los genes mitocondriales
-is.mito &lt;- which(location == "MT")
-
+# Control de calidad
 library('scater')
 ```
 
@@ -352,59 +292,13 @@ library('scater')
 ```
 
 ```r
-sce.416b &lt;- addPerCellQC(sce.416b,
-    subsets = list(Mito = is.mito))
+is.mito &lt;- which(rowData(sce.zeisel)$featureType == "mito")
+stats &lt;- perCellQCMetrics(sce.zeisel, subsets = list(Mt = is.mito))
+qc &lt;-
+    quickPerCellQC(stats,
+        percent_subsets = c("altexps_ERCC_percent", "subsets_Mt_percent"))
+sce.zeisel &lt;- sce.zeisel[, !qc$discard]
 ```
-
-]
-
----
-
-# Preguntas
-
---
-
-* ¿Qué cambió en nuestro objeto `sce` después de `addPerCellQC`?
-
---
-
-* Haz una gráfica de _boxplots_ del número de genes por bloque (block) de células. 
-
-???
-
-* Ahora tenemos más información en `colData(sce.416b)`
-* `with(colData(sce.416b), boxplot(detected ~ block))`
-
----
-
-# Gráficas sobre medidas de control de calidad (QC)
-
-.scroll-output[
-
-
-```r
-plotColData(sce.416b, x = "block", y = "detected")
-```
-
-![](03-quality-control_files/figure-html/qc_metrics-1.png)&lt;!-- --&gt;
-
-```r
-plotColData(sce.416b, x = "block", y = "detected") +
-    scale_y_log10()
-```
-
-![](03-quality-control_files/figure-html/qc_metrics-2.png)&lt;!-- --&gt;
-
-```r
-plotColData(sce.416b,
-    x = "block",
-    y = "detected",
-    other_fields = "phenotype") +
-    scale_y_log10() +
-    facet_wrap( ~ phenotype)
-```
-
-![](03-quality-control_files/figure-html/qc_metrics-3.png)&lt;!-- --&gt;
 
 ]
 
@@ -414,450 +308,139 @@ plotColData(sce.416b,
 
 
 ```r
-# Valores de límite ejemplo
-qc.lib &lt;- sce.416b$sum &lt; 100000
-qc.nexprs &lt;- sce.416b$detected &lt; 5000
-qc.spike &lt;- sce.416b$altexps_ERCC_percent &gt; 10
-qc.mito &lt;- sce.416b$subsets_Mito_percent &gt; 10
-discard &lt;- qc.lib | qc.nexprs | qc.spike | qc.mito
+# Estimar tamaños de librerías
+lib.sf.zeisel &lt;- librarySizeFactors(sce.zeisel)
 
-# Obtenemos un resumen del número de células
-# eliminadas por cada filtro
-DataFrame(
-    LibSize = sum(qc.lib),
-    NExprs = sum(qc.nexprs),
-    SpikeProp = sum(qc.spike),
-    MitoProp = sum(qc.mito),
-    Total = sum(discard)
-)
+# Examina la distribución de los tamaños de librerías
+# que acabamos de estimar
+summary(lib.sf.zeisel)
 ```
 
 ```
-## DataFrame with 1 row and 5 columns
-##     LibSize    NExprs SpikeProp  MitoProp     Total
-##   &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;
-## 1         3         0        19        14        33
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.1754  0.5682  0.8669  1.0000  1.2758  4.0651
 ```
 
 ```r
-qc.lib2 &lt;- isOutlier(sce.416b$sum, log = TRUE, type = "lower")
-qc.nexprs2 &lt;- isOutlier(sce.416b$detected, log = TRUE,
-    type = "lower")
-qc.spike2 &lt;- isOutlier(sce.416b$altexps_ERCC_percent,
-    type = "higher")
-qc.mito2 &lt;- isOutlier(sce.416b$subsets_Mito_percent,
-    type = "higher")
-discard2 &lt;- qc.lib2 | qc.nexprs2 | qc.spike2 | qc.mito2
-
-# Extraemos los límites de valores (thresholds)
-attr(qc.lib2, "thresholds")
+hist(log10(lib.sf.zeisel), xlab = "Log10[Size factor]", col = "grey80")
 ```
 
-```
-##    lower   higher 
-## 434082.9      Inf
-```
+![](04-normalization_files/figure-html/all_code2-1.png)&lt;!-- --&gt;
 
 ```r
-attr(qc.nexprs2, "thresholds")
-```
-
-```
-##    lower   higher 
-## 5231.468      Inf
-```
-
-```r
-# Obtenemos un resumen del número de células
-# eliminadas por cada filtro
-DataFrame(
-    LibSize = sum(qc.lib2),
-    NExprs = sum(qc.nexprs2),
-    SpikeProp = sum(qc.spike2),
-    MitoProp = sum(qc.mito2),
-    Total = sum(discard2)
-)
-```
-
-```
-## DataFrame with 1 row and 5 columns
-##     LibSize    NExprs SpikeProp  MitoProp     Total
-##   &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;
-## 1         4         0         1         2         6
-```
-
-```r
-## Más pruebas
-plotColData(sce.416b,
-    x = "block",
-    y = "detected",
-    other_fields = "phenotype") +
-    scale_y_log10() +
-    facet_wrap( ~ phenotype)
-```
-
-![](03-quality-control_files/figure-html/all_code_part2-1.png)&lt;!-- --&gt;
-
-```r
-batch &lt;- paste0(sce.416b$phenotype, "-", sce.416b$block)
-qc.lib3 &lt;- isOutlier(sce.416b$sum,
-    log = TRUE,
-    type = "lower",
-    batch = batch)
-qc.nexprs3 &lt;- isOutlier(sce.416b$detected,
-    log = TRUE,
-    type = "lower",
-    batch = batch)
-qc.spike3 &lt;- isOutlier(sce.416b$altexps_ERCC_percent,
-    type = "higher",
-    batch = batch)
-qc.mito3 &lt;- isOutlier(sce.416b$subsets_Mito_percent,
-    type = "higher",
-    batch = batch)
-discard3 &lt;- qc.lib3 | qc.nexprs3 | qc.spike3 | qc.mito3
-
-# Extraemos los límites de valores (thresholds)
-attr(qc.lib3, "thresholds")
-```
-
-```
-##        induced CBFB-MYH11 oncogene expression-20160113
-## lower                                         461073.1
-## higher                                             Inf
-##        induced CBFB-MYH11 oncogene expression-20160325
-## lower                                         399133.7
-## higher                                             Inf
-##        wild type phenotype-20160113 wild type phenotype-20160325
-## lower                      599794.9                     370316.5
-## higher                          Inf                          Inf
-```
-
-```r
-attr(qc.nexprs3, "thresholds")
-```
-
-```
-##        induced CBFB-MYH11 oncogene expression-20160113
-## lower                                          5399.24
-## higher                                             Inf
-##        induced CBFB-MYH11 oncogene expression-20160325
-## lower                                          6519.74
-## higher                                             Inf
-##        wild type phenotype-20160113 wild type phenotype-20160325
-## lower                      7215.887                     7586.402
-## higher                          Inf                          Inf
-```
-
-```r
-# Obtenemos un resumen del número de células
-# eliminadas por cada filtro
-DataFrame(
-    LibSize = sum(qc.lib3),
-    NExprs = sum(qc.nexprs3),
-    SpikeProp = sum(qc.spike3),
-    MitoProp = sum(qc.mito3),
-    Total = sum(discard3)
-)
-```
-
-```
-## DataFrame with 1 row and 5 columns
-##     LibSize    NExprs SpikeProp  MitoProp     Total
-##   &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;
-## 1         5         4         6         2         9
-```
-
-]
-
----
-
-# Preguntas
-
---
-
-* ¿Fue necesario `qc.lib` para crear `discord`?
-
---
-
-* ¿Cúal filtro fue más estricto? ¿`discard` o `discard2`?
-
---
-
-
-* Al considerar el grupo de cada muestra (batch), ¿descartamos más células usando un valor de límite automático?
-
-
-???
-
-* Sí, usando `table(qc.lib , qc.spike)` y `table(qc.lib , qc.mito)`
-* `discard` de `table(discard, discard2)`
-* Sí, usando `table(discard, discard2, discard3)`
-
-
----
-
-.scroll-output[
-
-
-```r
-sce.grun &lt;- GrunPancreasData()
-```
-
-```
-## snapshotDate(): 2020-04-27
-```
-
-```
-## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
-```
-
-```
-## loading from cache
-```
-
-```r
-sce.grun &lt;- addPerCellQC(sce.grun)
-
-plotColData(sce.grun, x = "donor", y = "altexps_ERCC_percent")
-```
-
-```
-## Warning: Removed 10 rows containing non-finite values (stat_ydensity).
-```
-
-```
-## Warning: Removed 10 rows containing missing values (position_quasirandom).
-```
-
-![](03-quality-control_files/figure-html/use_case-1.png)&lt;!-- --&gt;
-
-```r
-discard.ercc &lt;- isOutlier(sce.grun$altexps_ERCC_percent,
-    type = "higher",
-    batch = sce.grun$donor)
-```
-
-```
-## Warning in isOutlier(sce.grun$altexps_ERCC_percent, type = "higher", batch =
-## sce.grun$donor): missing values ignored during outlier detection
-```
-
-```r
-discard.ercc2 &lt;- isOutlier(
-    sce.grun$altexps_ERCC_percent,
-    type = "higher",
-    batch = sce.grun$donor,
-    subset = sce.grun$donor %in% c("D17", "D2", "D7")
-)
-```
-
-```
-## Warning in isOutlier(sce.grun$altexps_ERCC_percent, type = "higher", batch =
-## sce.grun$donor, : missing values ignored during outlier detection
-```
-
-```r
-plotColData(
-    sce.grun,
-    x = "donor",
-    y = "altexps_ERCC_percent",
-    colour_by = data.frame(discard = discard.ercc)
-)
-```
-
-```
-## Warning: Removed 10 rows containing non-finite values (stat_ydensity).
-
-## Warning: Removed 10 rows containing missing values (position_quasirandom).
-```
-
-![](03-quality-control_files/figure-html/use_case-2.png)&lt;!-- --&gt;
-
-```r
-plotColData(
-    sce.grun,
-    x = "donor",
-    y = "altexps_ERCC_percent",
-    colour_by = data.frame(discard = discard.ercc2)
-)
-```
-
-```
-## Warning: Removed 10 rows containing non-finite values (stat_ydensity).
-
-## Warning: Removed 10 rows containing missing values (position_quasirandom).
-```
-
-![](03-quality-control_files/figure-html/use_case-3.png)&lt;!-- --&gt;
-
-```r
-# Agregamos información sobre que células
-# tienen valores extremos
-sce.416b$discard &lt;- discard2
-
-# Haz esta gráfica para cada medida de
-# control de calidad (QC)
-plotColData(
-    sce.416b,
-    x = "block",
-    y = "sum",
-    colour_by = "discard",
-    other_fields = "phenotype"
-) +
-    facet_wrap( ~ phenotype) +
-    scale_y_log10()
-```
-
-![](03-quality-control_files/figure-html/use_case-4.png)&lt;!-- --&gt;
-
-```r
-# Otra gráfica de diagnóstico útil
-plotColData(
-    sce.416b,
-    x = "sum",
-    y = "subsets_Mito_percent",
-    colour_by = "discard",
-    other_fields = c("block", "phenotype")
-) +
-    facet_grid(block ~ phenotype)
-```
-
-![](03-quality-control_files/figure-html/use_case-5.png)&lt;!-- --&gt;
-
-]
-
-
----
-
-.scroll-output[
-
-
-```r
-library('BiocFileCache')
-bfc &lt;- BiocFileCache()
-raw.path &lt;-
-    bfcrpath(
-        bfc,
-        file.path(
-            "http://cf.10xgenomics.com/samples",
-            "cell-exp/2.1.0/pbmc4k/pbmc4k_raw_gene_bc_matrices.tar.gz"
-        )
-    )
-```
-
-```
-## adding rname 'http://cf.10xgenomics.com/samples/cell-exp/2.1.0/pbmc4k/pbmc4k_raw_gene_bc_matrices.tar.gz'
-```
-
-```r
-untar(raw.path, exdir = file.path(tempdir(), "pbmc4k"))
-
-library('DropletUtils')
-library('Matrix')
-```
-
-```
-## 
-## Attaching package: 'Matrix'
-```
-
-```
-## The following object is masked from 'package:S4Vectors':
-## 
-##     expand
-```
-
-```r
-fname &lt;- file.path(tempdir(), "pbmc4k/raw_gene_bc_matrices/GRCh38")
-sce.pbmc &lt;- read10xCounts(fname, col.names = TRUE)
-
-bcrank &lt;- barcodeRanks(counts(sce.pbmc))
-
-# Mostremos solo los puntos únicos para acelerar
-# el proceso de hacer esta gráfica
-uniq &lt;- !duplicated(bcrank$rank)
+ls.zeisel &lt;- colSums(counts(sce.zeisel))
 plot(
-    bcrank$rank[uniq],
-    bcrank$total[uniq],
+    ls.zeisel,
+    lib.sf.zeisel,
     log = "xy",
-    xlab = "Rank",
-    ylab = "Total UMI count",
-    cex.lab = 1.2
+    xlab = "Library size",
+    ylab = "Size factor"
 )
 ```
 
+![](04-normalization_files/figure-html/all_code2-2.png)&lt;!-- --&gt;
+
+]
+
+
+---
+
+# Ejercicio
+
+
+--
+
+* ¿Son idénticos `ls.zeisel` y `lib.sf.zeisel`?
+
+--
+
+* ¿Son proporcionales?
+
+--
+
+* Calcula `lib.sf.zeisel` de forma manual
+
+
+---
+
+# Soluciones
+
+--
+
+* Revisa los detalles (**Details**) en `?scater::librarySizeFactors`
+
+--
+
+* Calcula los tamaños de librería manualmente
+
+
+```r
+## Primero calcula las sumas
+zeisel_sums &lt;- colSums(counts(sce.zeisel))
+identical(zeisel_sums, ls.zeisel)
 ```
-## Warning in xy.coords(x, y, xlabel, ylabel, log): 1 y value &lt;= 0 omitted from
-## logarithmic plot
+
+```
+## [1] TRUE
 ```
 
 ```r
-abline(h = metadata(bcrank)$inflection,
-    col = "darkgreen",
-    lty = 2)
-abline(h = metadata(bcrank)$knee,
-    col = "dodgerblue",
-    lty = 2)
-legend(
-    "bottomleft",
-    legend = c("Inflection", "Knee"),
-    col = c("darkgreen", "dodgerblue"),
-    lty = 2,
-    cex = 1.2
-)
+## Ahora asegurate que su media sea 1 (unity mean)
+zeisel_size_factors &lt;- zeisel_sums/mean(zeisel_sums)
+identical(zeisel_size_factors, lib.sf.zeisel)
 ```
 
-![](03-quality-control_files/figure-html/use_case_pbmc-1.png)&lt;!-- --&gt;
+```
+## [1] TRUE
+```
+
+--
+
+* Checa el [código fuente](https://github.com/davismcc/scater/blob/master/R/librarySizeFactors.R)
+
+---
+
+.scroll-output[
+
 
 ```r
+# Normalización por circunvolución (convolution)
+
+library('scran')
+# Pre-clustering
 set.seed(100)
-e.out &lt;- emptyDrops(counts(sce.pbmc))
+clust.zeisel &lt;- quickCluster(sce.zeisel)
+# Calcula factores de tamaño para la decircunvolución (deconvolution)
+deconv.sf.zeisel &lt;-
+    calculateSumFactors(sce.zeisel, clusters = clust.zeisel, min.mean = 0.1)
 
-# Revisa ?emptyDrops para una explicación de porqué hay valores NA
-summary(e.out$FDR &lt;= 0.001)
+# Examina la distribución de los factores de tamaño
+summary(deconv.sf.zeisel)
 ```
 
 ```
-##    Mode   FALSE    TRUE    NA's 
-## logical    1056    4233  731991
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.1282  0.4859  0.8248  1.0000  1.3194  4.6521
 ```
 
 ```r
-set.seed(100)
-limit &lt;- 100
-all.out &lt;-
-    emptyDrops(counts(sce.pbmc), lower = limit, test.ambient = TRUE)
-# Idealmente, este histograma ddebería verse uniforme.
-# Picos grandes cerca de cero indican que los _barcodes_
-# con un número total de cuentas menor a "lower" no son
-# de origen ambiental.
-hist(all.out$PValue[all.out$Total &lt;= limit &amp;
-        all.out$Total &gt; 0],
-    xlab = "P-value",
-    main = "",
+hist(log10(deconv.sf.zeisel), xlab = "Log10[Factor de tamaño]",
     col = "grey80")
 ```
 
-![](03-quality-control_files/figure-html/use_case_pbmc-2.png)&lt;!-- --&gt;
+![](04-normalization_files/figure-html/all_code3-1.png)&lt;!-- --&gt;
 
 ```r
-sce.pbmc &lt;- sce.pbmc[, which(e.out$FDR &lt;= 0.001)]
-
-is.mito &lt;- grep("^MT-", rowData(sce.pbmc)$Symbol)
-sce.pmbc &lt;- addPerCellQC(sce.pbmc, subsets = list(MT = is.mito))
-discard.mito &lt;-
-    isOutlier(sce.pmbc$subsets_MT_percent, type = "higher")
 plot(
-    sce.pmbc$sum,
-    sce.pmbc$subsets_MT_percent,
-    log = "x",
-    xlab = "Total count",
-    ylab = "Mitochondrial %"
+    ls.zeisel,
+    deconv.sf.zeisel,
+    log = "xy",
+    xlab = "Factores tamaño de librería",
+    ylab = "Factores tamaño deconv"
 )
-abline(h = attr(discard.mito, "thresholds")["higher"], col = "red")
 ```
 
-![](03-quality-control_files/figure-html/use_case_pbmc-3.png)&lt;!-- --&gt;
+![](04-normalization_files/figure-html/all_code3-2.png)&lt;!-- --&gt;
 
 ]
 
@@ -867,49 +450,53 @@ abline(h = attr(discard.mito, "thresholds")["higher"], col = "red")
 
 --
 
-* ¿Por qué `emptyDrops()` regresa valores `NA`?
+* ¿Cúantos clusters rápidos obtuvimos?
 
 --
 
-* ¿Los valores p son iguales entre `e.out` y `all.out`?
+* ¿Cúantas células por cluster obtuvimos?
 
 --
 
-* ¿Son iguales si obtienes el subconjunto de valores que no son `NA`?
+* ¿Cúantos clusters rápidos obtendríamos si cambiamos el tamaño mínimo a 200? Usa 100 como la semilla (seed).
+
+--
+
+* ¿Cúantas líneas ves en la gráfica?
+
 
 ???
 
-* Debajo de `lower` son considerados _droplets_ vacíos. Solo se usan para la correción estadística de pruebas múltiples.
-* No, debido a los `NA`s.
-* Sí: `identical(e.out$PValue[!is.na(e.out$FDR)], all.out$PValue[!is.na(e.out$FDR)])`
-
+* 12
+* Desde 113 to 325, `sort(table(clust.zeisel))`
+* 10 `set.seed(100); sort(table(quickCluster(sce.zeisel, min.size = 200)))` 
+* Veo varias líneas cerca de la diagonal. Muy probablemente son 7 `table(factor(sce.zeisel$level1class))`
 
 ---
 
+.scroll-output[
+
 
 ```r
-# Eliminemos las células de calidad baja
-# al quedarnos con las columnas del objeto sce que NO
-# queremos descartar (eso hace el !)
-filtered &lt;- sce.416b[,!discard2]
-# Alternativamente, podemos marcar
-# las células de baja calidad
-marked &lt;- sce.416b
-marked$discard &lt;- discard2
+# Factores de tamaño de librería vs 
+# factor de tamaño vía circunvolución (convolution)
+
+# Usa colores para los típos celulares que nos dieron
+plot(
+    lib.sf.zeisel,
+    deconv.sf.zeisel,
+    xlab = "Factores tamaño de librería",
+    ylab = "Factores tamaño deconv",
+    log = 'xy',
+    pch = 16,
+    col = as.integer(factor(sce.zeisel$level1class))
+)
+abline(a = 0, b = 1, col = "red")
 ```
 
---
+![](04-normalization_files/figure-html/all_code4-1.png)&lt;!-- --&gt;
 
-* ¿Cúal de estos objetos es más grande?
-
---
-
-* ¿Cúal prefieres usar?
-
-???
-
-* `marked` es más grande que `filtered`
-* Yo prefiero usar `marked` si tengo suficiente memoria para usarlo.
+]
 
 ---
 
@@ -958,18 +545,18 @@ sessioninfo::session_info()
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       America/New_York            
-##  date     2020-08-04                  
+##  date     2020-08-05                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  package                * version  date       lib source                            
 ##  AnnotationDbi          * 1.50.3   2020-07-25 [1] Bioconductor                      
 ##  AnnotationFilter       * 1.12.0   2020-04-27 [1] Bioconductor                      
-##  AnnotationHub          * 2.20.0   2020-04-27 [1] Bioconductor                      
+##  AnnotationHub            2.20.0   2020-04-27 [1] Bioconductor                      
 ##  askpass                  1.1      2019-01-13 [1] CRAN (R 4.0.0)                    
 ##  assertthat               0.2.1    2019-03-21 [1] CRAN (R 4.0.0)                    
 ##  beeswarm                 0.2.3    2016-04-25 [1] CRAN (R 4.0.0)                    
 ##  Biobase                * 2.48.0   2020-04-27 [1] Bioconductor                      
-##  BiocFileCache          * 1.12.0   2020-04-27 [1] Bioconductor                      
+##  BiocFileCache            1.12.0   2020-04-27 [1] Bioconductor                      
 ##  BiocGenerics           * 0.34.0   2020-04-27 [1] Bioconductor                      
 ##  BiocManager              1.30.10  2019-11-16 [1] CRAN (R 4.0.0)                    
 ##  BiocNeighbors            1.6.0    2020-04-27 [1] Bioconductor                      
@@ -986,24 +573,21 @@ sessioninfo::session_info()
 ##  codetools                0.2-16   2018-12-24 [1] CRAN (R 4.0.2)                    
 ##  colorout               * 1.2-2    2020-03-16 [1] Github (jalvesaq/colorout@726d681)
 ##  colorspace               1.4-1    2019-03-18 [1] CRAN (R 4.0.0)                    
-##  cowplot                  1.0.0    2019-07-11 [1] CRAN (R 4.0.2)                    
 ##  crayon                   1.3.4    2017-09-16 [1] CRAN (R 4.0.0)                    
 ##  curl                     4.3      2019-12-02 [1] CRAN (R 4.0.0)                    
 ##  DBI                      1.1.0    2019-12-15 [1] CRAN (R 4.0.0)                    
-##  dbplyr                 * 1.4.4    2020-05-27 [1] CRAN (R 4.0.2)                    
+##  dbplyr                   1.4.4    2020-05-27 [1] CRAN (R 4.0.2)                    
 ##  DelayedArray           * 0.14.1   2020-07-14 [1] Bioconductor                      
 ##  DelayedMatrixStats       1.10.1   2020-07-03 [1] Bioconductor                      
 ##  digest                   0.6.25   2020-02-23 [1] CRAN (R 4.0.0)                    
 ##  dplyr                    1.0.1    2020-07-31 [1] CRAN (R 4.0.2)                    
 ##  dqrng                    0.2.1    2019-05-17 [1] CRAN (R 4.0.0)                    
-##  DropletUtils           * 1.8.0    2020-04-27 [1] Bioconductor                      
 ##  edgeR                    3.30.3   2020-06-02 [1] Bioconductor                      
 ##  ellipsis                 0.3.1    2020-05-15 [1] CRAN (R 4.0.0)                    
 ##  ensembldb              * 2.12.1   2020-05-06 [1] Bioconductor                      
 ##  evaluate                 0.14     2019-05-28 [1] CRAN (R 4.0.0)                    
 ##  ExperimentHub            1.14.0   2020-04-27 [1] Bioconductor                      
 ##  fansi                    0.4.1    2020-01-08 [1] CRAN (R 4.0.0)                    
-##  farver                   2.0.3    2020-01-16 [1] CRAN (R 4.0.0)                    
 ##  fastmap                  1.0.1    2019-10-08 [1] CRAN (R 4.0.0)                    
 ##  generics                 0.0.2    2018-11-29 [1] CRAN (R 4.0.0)                    
 ##  GenomeInfoDb           * 1.24.2   2020-06-15 [1] Bioconductor                      
@@ -1016,16 +600,15 @@ sessioninfo::session_info()
 ##  glue                     1.4.1    2020-05-13 [1] CRAN (R 4.0.0)                    
 ##  gridExtra                2.3      2017-09-09 [1] CRAN (R 4.0.0)                    
 ##  gtable                   0.3.0    2019-03-25 [1] CRAN (R 4.0.0)                    
-##  HDF5Array                1.16.1   2020-06-16 [1] Bioconductor                      
 ##  hms                      0.5.3    2020-01-08 [1] CRAN (R 4.0.0)                    
 ##  htmltools                0.5.0    2020-06-16 [1] CRAN (R 4.0.2)                    
 ##  httpuv                   1.5.4    2020-06-06 [1] CRAN (R 4.0.2)                    
 ##  httr                     1.4.2    2020-07-20 [1] CRAN (R 4.0.2)                    
+##  igraph                   1.2.5    2020-03-19 [1] CRAN (R 4.0.0)                    
 ##  interactiveDisplayBase   1.26.3   2020-06-02 [1] Bioconductor                      
 ##  IRanges                * 2.22.2   2020-05-21 [1] Bioconductor                      
 ##  irlba                    2.3.3    2019-02-05 [1] CRAN (R 4.0.0)                    
 ##  knitr                    1.29     2020-06-23 [1] CRAN (R 4.0.0)                    
-##  labeling                 0.3      2014-08-23 [1] CRAN (R 4.0.0)                    
 ##  later                    1.1.0.1  2020-06-05 [1] CRAN (R 4.0.2)                    
 ##  lattice                  0.20-41  2020-04-02 [1] CRAN (R 4.0.2)                    
 ##  lazyeval                 0.2.2    2019-03-15 [1] CRAN (R 4.0.0)                    
@@ -1033,7 +616,7 @@ sessioninfo::session_info()
 ##  limma                    3.44.3   2020-06-12 [1] Bioconductor                      
 ##  locfit                   1.5-9.4  2020-03-25 [1] CRAN (R 4.0.0)                    
 ##  magrittr                 1.5      2014-11-22 [1] CRAN (R 4.0.0)                    
-##  Matrix                 * 1.2-18   2019-11-27 [1] CRAN (R 4.0.2)                    
+##  Matrix                   1.2-18   2019-11-27 [1] CRAN (R 4.0.2)                    
 ##  matrixStats            * 0.56.0   2020-03-13 [1] CRAN (R 4.0.0)                    
 ##  memoise                  1.1.0    2017-04-21 [1] CRAN (R 4.0.0)                    
 ##  mime                     0.9      2020-02-04 [1] CRAN (R 4.0.0)                    
@@ -1046,15 +629,10 @@ sessioninfo::session_info()
 ##  promises                 1.1.1    2020-06-09 [1] CRAN (R 4.0.2)                    
 ##  ProtGenerics             1.20.0   2020-04-27 [1] Bioconductor                      
 ##  purrr                    0.3.4    2020-04-17 [1] CRAN (R 4.0.0)                    
-##  R.methodsS3              1.8.0    2020-02-14 [1] CRAN (R 4.0.0)                    
-##  R.oo                     1.23.0   2019-11-03 [1] CRAN (R 4.0.0)                    
-##  R.utils                  2.9.2    2019-12-08 [1] CRAN (R 4.0.0)                    
 ##  R6                       2.4.1    2019-11-12 [1] CRAN (R 4.0.0)                    
 ##  rappdirs                 0.3.1    2016-03-28 [1] CRAN (R 4.0.0)                    
 ##  Rcpp                     1.0.5    2020-07-06 [1] CRAN (R 4.0.2)                    
 ##  RCurl                    1.98-1.2 2020-04-18 [1] CRAN (R 4.0.0)                    
-##  rhdf5                    2.32.2   2020-07-03 [1] Bioconductor                      
-##  Rhdf5lib                 1.10.1   2020-07-09 [1] Bioconductor                      
 ##  rlang                    0.4.7    2020-07-09 [1] CRAN (R 4.0.2)                    
 ##  rmarkdown                2.3      2020-06-18 [1] CRAN (R 4.0.0)                    
 ##  Rsamtools                2.4.0    2020-04-27 [1] Bioconductor                      
@@ -1064,12 +642,14 @@ sessioninfo::session_info()
 ##  S4Vectors              * 0.26.1   2020-05-16 [1] Bioconductor                      
 ##  scales                   1.1.1    2020-05-11 [1] CRAN (R 4.0.0)                    
 ##  scater                 * 1.16.2   2020-06-26 [1] Bioconductor                      
+##  scran                  * 1.16.0   2020-04-27 [1] Bioconductor                      
 ##  scRNAseq               * 2.2.0    2020-05-07 [1] Bioconductor                      
 ##  sessioninfo              1.1.1    2018-11-05 [1] CRAN (R 4.0.2)                    
 ##  shiny                    1.5.0    2020-06-23 [1] CRAN (R 4.0.2)                    
 ##  showtext                 0.8-1    2020-05-25 [1] CRAN (R 4.0.2)                    
 ##  showtextdb               3.0      2020-06-04 [1] CRAN (R 4.0.2)                    
 ##  SingleCellExperiment   * 1.10.1   2020-04-28 [1] Bioconductor                      
+##  statmod                  1.4.34   2020-02-17 [1] CRAN (R 4.0.0)                    
 ##  stringi                  1.4.6    2020-02-17 [1] CRAN (R 4.0.0)                    
 ##  stringr                  1.4.0    2019-02-10 [1] CRAN (R 4.0.0)                    
 ##  SummarizedExperiment   * 1.18.2   2020-07-14 [1] Bioconductor                      

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Control de calidad</title>
+    <title>Selección de genes</title>
     <meta charset="utf-8" />
     <meta name="author" content="Leonardo Collado-Torres" />
     <meta name="date" content="2020-08-05" />
@@ -20,7 +20,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# <strong>Control de calidad</strong>
+# <strong>Selección de genes</strong>
 ## <strong>Bioconductor</strong> para datos transcriptómicos de célula única (<strong>scRNA-seq</strong>) – <strong>CDSB2020</strong>
 ### <a href="http://lcolladotor.github.io/">Leonardo Collado-Torres</a>
 ### 2020-08-05
@@ -72,11 +72,12 @@ pre {
 }
 &lt;/style&gt;
 
+
 ---
 
 # Diapositivas de Peter Hickey
 
-Ve las diapositivas [aquí](https://docs.google.com/presentation/d/1pIiA7fZd1GBxaKQpzT2sPn7C6fIZxEJ8NI4p3UtoIOo/edit#slide=id.p)
+Ve las diapositivas [aquí](https://docs.google.com/presentation/d/19J2FyjKlBQdAkku4Oa6UZ6SA-Y4P7AEKCRIbEQWA9ho/edit#slide=id.ga100bba375887aa_0)
 
 ---
 
@@ -86,8 +87,27 @@ Ve las diapositivas [aquí](https://docs.google.com/presentation/d/1pIiA7fZd1GBx
 
 
 ```r
-## Datos
-library('scRNAseq')
+# Usemos datos de pbmc4k
+library('BiocFileCache')
+```
+
+```
+## Loading required package: dbplyr
+```
+
+```r
+bfc &lt;- BiocFileCache()
+raw.path &lt;-
+    bfcrpath(
+        bfc,
+        file.path(
+            "http://cf.10xgenomics.com/samples",
+            "cell-exp/2.1.0/pbmc4k/pbmc4k_raw_gene_bc_matrices.tar.gz"
+        )
+    )
+untar(raw.path, exdir = file.path(tempdir(), "pbmc4k"))
+
+library('DropletUtils')
 ```
 
 ```
@@ -216,6 +236,139 @@ library('scRNAseq')
 ```
 
 ```r
+library('Matrix')
+```
+
+```
+## 
+## Attaching package: 'Matrix'
+```
+
+```
+## The following object is masked from 'package:S4Vectors':
+## 
+##     expand
+```
+
+```r
+fname &lt;- file.path(tempdir(), "pbmc4k/raw_gene_bc_matrices/GRCh38")
+sce.pbmc &lt;- read10xCounts(fname, col.names = TRUE)
+
+# Anotación de los genes
+library('scater')
+```
+
+```
+## Loading required package: ggplot2
+```
+
+```r
+rownames(sce.pbmc) &lt;- uniquifyFeatureNames(rowData(sce.pbmc)$ID, rowData(sce.pbmc)$Symbol)
+library('EnsDb.Hsapiens.v86')
+```
+
+```
+## Loading required package: ensembldb
+```
+
+```
+## Loading required package: GenomicFeatures
+```
+
+```
+## Loading required package: AnnotationDbi
+```
+
+```
+## Loading required package: AnnotationFilter
+```
+
+```
+## 
+## Attaching package: 'ensembldb'
+```
+
+```
+## The following object is masked from 'package:stats':
+## 
+##     filter
+```
+
+```r
+location &lt;- mapIds(
+    EnsDb.Hsapiens.v86,
+    keys = rowData(sce.pbmc)$ID,
+    column = "SEQNAME",
+    keytype = "GENEID"
+)
+```
+
+```
+## Warning: Unable to map 144 of 33694 requested IDs.
+```
+
+]
+
+---
+
+.scroll-output[
+
+
+```r
+# Detección de _droplets_ con células
+set.seed(100)
+e.out &lt;- emptyDrops(counts(sce.pbmc))
+sce.pbmc &lt;- sce.pbmc[, which(e.out$FDR &lt;= 0.001)]
+
+# Control de calidad
+stats &lt;-
+    perCellQCMetrics(sce.pbmc, subsets = list(Mito = which(location == "MT")))
+high.mito &lt;- isOutlier(stats$subsets_Mito_percent,
+    type = "higher")
+sce.pbmc &lt;- sce.pbmc[, !high.mito]
+
+# Normalización de los datos
+library('scran')
+set.seed(1000)
+clusters &lt;- quickCluster(sce.pbmc)
+sce.pbmc &lt;- computeSumFactors(sce.pbmc, cluster = clusters)
+sce.pbmc &lt;- logNormCounts(sce.pbmc)
+```
+
+]
+
+---
+
+# Ejercicios
+
+--
+
+* ¿Cómo determinamos cuales eran los genes mitocondriales?
+
+--
+
+* ¿Cómo decidimos filtrar las células?
+
+--
+
+* ¿Puedes explicar como normalizamos los datos?
+
+???
+
+* Usando Ensembl v86 para humano
+* Usamos los resultados de `emptyDrops()` con un límite de 0.1% FDR y el filtro de 3 desviaciones sobre la mediana (MAD) en la expresión mitocondrial.
+* Encontramos unos clusters rápidos para las célulasy usamos esa información para calcular los factores de tamaño.
+
+
+---
+
+.scroll-output[
+
+
+```r
+# Set de datos de ejemplo: 416B ------------------------------------------------
+
+library('scRNAseq')
 sce.416b &lt;- LunSpikeInData(which = "416b")
 ```
 
@@ -255,24 +408,11 @@ sce.416b &lt;- LunSpikeInData(which = "416b")
 ## loading from cache
 ```
 
-```
-## require("ensembldb")
-```
-
 ```r
 sce.416b$block &lt;- factor(sce.416b$block)
 
-# Descarga los archivos de anotación de la base de datos de Ensembl
-# correspondientes usando los recursos disponibles vía AnnotationHub
+# Anotación de genes
 library('AnnotationHub')
-```
-
-```
-## Loading required package: BiocFileCache
-```
-
-```
-## Loading required package: dbplyr
 ```
 
 ```
@@ -287,40 +427,11 @@ library('AnnotationHub')
 ```
 
 ```r
-ah &lt;- AnnotationHub()
+ens.mm.v97 &lt;- AnnotationHub()[["AH73905"]]
 ```
 
 ```
 ## snapshotDate(): 2020-04-27
-```
-
-```r
-query(ah, c("Mus musculus", "Ensembl", "v97"))
-```
-
-```
-## AnnotationHub with 1 record
-## # snapshotDate(): 2020-04-27
-## # names(): AH73905
-## # $dataprovider: Ensembl
-## # $species: Mus musculus
-## # $rdataclass: EnsDb
-## # $rdatadateadded: 2019-05-02
-## # $title: Ensembl 97 EnsDb for Mus musculus
-## # $description: Gene and protein annotations for Mus musculus based on Ensem...
-## # $taxonomyid: 10090
-## # $genome: GRCm38
-## # $sourcetype: ensembl
-## # $sourceurl: http://www.ensembl.org
-## # $sourcesize: NA
-## # $tags: c("97", "AHEnsDbs", "Annotation", "EnsDb", "Ensembl", "Gene",
-## #   "Protein", "Transcript") 
-## # retrieve record with 'object[["AH73905"]]'
-```
-
-```r
-# Obtén la posición del cromosoma para cada gen
-ens.mm.v97 &lt;- ah[["AH73905"]]
 ```
 
 ```
@@ -328,7 +439,21 @@ ens.mm.v97 &lt;- ah[["AH73905"]]
 ```
 
 ```r
-location &lt;- mapIds(
+rowData(sce.416b)$ENSEMBL &lt;- rownames(sce.416b)
+rowData(sce.416b)$SYMBOL &lt;- mapIds(
+    ens.mm.v97,
+    keys = rownames(sce.416b),
+    keytype = "GENEID",
+    column = "SYMBOL"
+)
+```
+
+```
+## Warning: Unable to map 563 of 46604 requested IDs.
+```
+
+```r
+rowData(sce.416b)$SEQNAME &lt;- mapIds(
     ens.mm.v97,
     keys = rownames(sce.416b),
     keytype = "GENEID",
@@ -341,523 +466,23 @@ location &lt;- mapIds(
 ```
 
 ```r
-# Identifica los genes mitocondriales
-is.mito &lt;- which(location == "MT")
+rownames(sce.416b) &lt;- uniquifyFeatureNames(rowData(sce.416b)$ENSEMBL,
+    rowData(sce.416b)$SYMBOL)
 
-library('scater')
-```
-
-```
-## Loading required package: ggplot2
-```
-
-```r
-sce.416b &lt;- addPerCellQC(sce.416b,
-    subsets = list(Mito = is.mito))
-```
-
-]
-
----
-
-# Preguntas
-
---
-
-* ¿Qué cambió en nuestro objeto `sce` después de `addPerCellQC`?
-
---
-
-* Haz una gráfica de _boxplots_ del número de genes por bloque (block) de células. 
-
-???
-
-* Ahora tenemos más información en `colData(sce.416b)`
-* `with(colData(sce.416b), boxplot(detected ~ block))`
-
----
-
-# Gráficas sobre medidas de control de calidad (QC)
-
-.scroll-output[
-
-
-```r
-plotColData(sce.416b, x = "block", y = "detected")
-```
-
-![](03-quality-control_files/figure-html/qc_metrics-1.png)&lt;!-- --&gt;
-
-```r
-plotColData(sce.416b, x = "block", y = "detected") +
-    scale_y_log10()
-```
-
-![](03-quality-control_files/figure-html/qc_metrics-2.png)&lt;!-- --&gt;
-
-```r
-plotColData(sce.416b,
-    x = "block",
-    y = "detected",
-    other_fields = "phenotype") +
-    scale_y_log10() +
-    facet_wrap( ~ phenotype)
-```
-
-![](03-quality-control_files/figure-html/qc_metrics-3.png)&lt;!-- --&gt;
-
-]
-
----
-
-.scroll-output[
-
-
-```r
-# Valores de límite ejemplo
-qc.lib &lt;- sce.416b$sum &lt; 100000
-qc.nexprs &lt;- sce.416b$detected &lt; 5000
-qc.spike &lt;- sce.416b$altexps_ERCC_percent &gt; 10
-qc.mito &lt;- sce.416b$subsets_Mito_percent &gt; 10
-discard &lt;- qc.lib | qc.nexprs | qc.spike | qc.mito
-
-# Obtenemos un resumen del número de células
-# eliminadas por cada filtro
-DataFrame(
-    LibSize = sum(qc.lib),
-    NExprs = sum(qc.nexprs),
-    SpikeProp = sum(qc.spike),
-    MitoProp = sum(qc.mito),
-    Total = sum(discard)
+# Control de calidad
+mito &lt;- which(rowData(sce.416b)$SEQNAME == "MT")
+stats &lt;- perCellQCMetrics(sce.416b, subsets = list(Mt = mito))
+qc &lt;- quickPerCellQC(
+    stats,
+    percent_subsets = c("subsets_Mt_percent", "altexps_ERCC_percent"),
+    batch = sce.416b$block
 )
-```
-
-```
-## DataFrame with 1 row and 5 columns
-##     LibSize    NExprs SpikeProp  MitoProp     Total
-##   &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;
-## 1         3         0        19        14        33
-```
-
-```r
-qc.lib2 &lt;- isOutlier(sce.416b$sum, log = TRUE, type = "lower")
-qc.nexprs2 &lt;- isOutlier(sce.416b$detected, log = TRUE,
-    type = "lower")
-qc.spike2 &lt;- isOutlier(sce.416b$altexps_ERCC_percent,
-    type = "higher")
-qc.mito2 &lt;- isOutlier(sce.416b$subsets_Mito_percent,
-    type = "higher")
-discard2 &lt;- qc.lib2 | qc.nexprs2 | qc.spike2 | qc.mito2
-
-# Extraemos los límites de valores (thresholds)
-attr(qc.lib2, "thresholds")
-```
-
-```
-##    lower   higher 
-## 434082.9      Inf
-```
-
-```r
-attr(qc.nexprs2, "thresholds")
-```
-
-```
-##    lower   higher 
-## 5231.468      Inf
-```
-
-```r
-# Obtenemos un resumen del número de células
-# eliminadas por cada filtro
-DataFrame(
-    LibSize = sum(qc.lib2),
-    NExprs = sum(qc.nexprs2),
-    SpikeProp = sum(qc.spike2),
-    MitoProp = sum(qc.mito2),
-    Total = sum(discard2)
-)
-```
-
-```
-## DataFrame with 1 row and 5 columns
-##     LibSize    NExprs SpikeProp  MitoProp     Total
-##   &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;
-## 1         4         0         1         2         6
-```
-
-```r
-## Más pruebas
-plotColData(sce.416b,
-    x = "block",
-    y = "detected",
-    other_fields = "phenotype") +
-    scale_y_log10() +
-    facet_wrap( ~ phenotype)
-```
-
-![](03-quality-control_files/figure-html/all_code_part2-1.png)&lt;!-- --&gt;
-
-```r
-batch &lt;- paste0(sce.416b$phenotype, "-", sce.416b$block)
-qc.lib3 &lt;- isOutlier(sce.416b$sum,
-    log = TRUE,
-    type = "lower",
-    batch = batch)
-qc.nexprs3 &lt;- isOutlier(sce.416b$detected,
-    log = TRUE,
-    type = "lower",
-    batch = batch)
-qc.spike3 &lt;- isOutlier(sce.416b$altexps_ERCC_percent,
-    type = "higher",
-    batch = batch)
-qc.mito3 &lt;- isOutlier(sce.416b$subsets_Mito_percent,
-    type = "higher",
-    batch = batch)
-discard3 &lt;- qc.lib3 | qc.nexprs3 | qc.spike3 | qc.mito3
-
-# Extraemos los límites de valores (thresholds)
-attr(qc.lib3, "thresholds")
-```
-
-```
-##        induced CBFB-MYH11 oncogene expression-20160113
-## lower                                         461073.1
-## higher                                             Inf
-##        induced CBFB-MYH11 oncogene expression-20160325
-## lower                                         399133.7
-## higher                                             Inf
-##        wild type phenotype-20160113 wild type phenotype-20160325
-## lower                      599794.9                     370316.5
-## higher                          Inf                          Inf
-```
-
-```r
-attr(qc.nexprs3, "thresholds")
-```
-
-```
-##        induced CBFB-MYH11 oncogene expression-20160113
-## lower                                          5399.24
-## higher                                             Inf
-##        induced CBFB-MYH11 oncogene expression-20160325
-## lower                                          6519.74
-## higher                                             Inf
-##        wild type phenotype-20160113 wild type phenotype-20160325
-## lower                      7215.887                     7586.402
-## higher                          Inf                          Inf
-```
-
-```r
-# Obtenemos un resumen del número de células
-# eliminadas por cada filtro
-DataFrame(
-    LibSize = sum(qc.lib3),
-    NExprs = sum(qc.nexprs3),
-    SpikeProp = sum(qc.spike3),
-    MitoProp = sum(qc.mito3),
-    Total = sum(discard3)
-)
-```
-
-```
-## DataFrame with 1 row and 5 columns
-##     LibSize    NExprs SpikeProp  MitoProp     Total
-##   &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt; &lt;integer&gt;
-## 1         5         4         6         2         9
-```
-
-]
-
----
-
-# Preguntas
-
---
-
-* ¿Fue necesario `qc.lib` para crear `discord`?
-
---
-
-* ¿Cúal filtro fue más estricto? ¿`discard` o `discard2`?
-
---
-
-
-* Al considerar el grupo de cada muestra (batch), ¿descartamos más células usando un valor de límite automático?
-
-
-???
-
-* Sí, usando `table(qc.lib , qc.spike)` y `table(qc.lib , qc.mito)`
-* `discard` de `table(discard, discard2)`
-* Sí, usando `table(discard, discard2, discard3)`
-
-
----
-
-.scroll-output[
-
-
-```r
-sce.grun &lt;- GrunPancreasData()
-```
-
-```
-## snapshotDate(): 2020-04-27
-```
-
-```
-## see ?scRNAseq and browseVignettes('scRNAseq') for documentation
-```
-
-```
-## loading from cache
-```
-
-```r
-sce.grun &lt;- addPerCellQC(sce.grun)
-
-plotColData(sce.grun, x = "donor", y = "altexps_ERCC_percent")
-```
-
-```
-## Warning: Removed 10 rows containing non-finite values (stat_ydensity).
-```
-
-```
-## Warning: Removed 10 rows containing missing values (position_quasirandom).
-```
-
-![](03-quality-control_files/figure-html/use_case-1.png)&lt;!-- --&gt;
-
-```r
-discard.ercc &lt;- isOutlier(sce.grun$altexps_ERCC_percent,
-    type = "higher",
-    batch = sce.grun$donor)
-```
-
-```
-## Warning in isOutlier(sce.grun$altexps_ERCC_percent, type = "higher", batch =
-## sce.grun$donor): missing values ignored during outlier detection
-```
-
-```r
-discard.ercc2 &lt;- isOutlier(
-    sce.grun$altexps_ERCC_percent,
-    type = "higher",
-    batch = sce.grun$donor,
-    subset = sce.grun$donor %in% c("D17", "D2", "D7")
-)
-```
-
-```
-## Warning in isOutlier(sce.grun$altexps_ERCC_percent, type = "higher", batch =
-## sce.grun$donor, : missing values ignored during outlier detection
-```
-
-```r
-plotColData(
-    sce.grun,
-    x = "donor",
-    y = "altexps_ERCC_percent",
-    colour_by = data.frame(discard = discard.ercc)
-)
-```
-
-```
-## Warning: Removed 10 rows containing non-finite values (stat_ydensity).
-
-## Warning: Removed 10 rows containing missing values (position_quasirandom).
-```
-
-![](03-quality-control_files/figure-html/use_case-2.png)&lt;!-- --&gt;
-
-```r
-plotColData(
-    sce.grun,
-    x = "donor",
-    y = "altexps_ERCC_percent",
-    colour_by = data.frame(discard = discard.ercc2)
-)
-```
-
-```
-## Warning: Removed 10 rows containing non-finite values (stat_ydensity).
-
-## Warning: Removed 10 rows containing missing values (position_quasirandom).
-```
-
-![](03-quality-control_files/figure-html/use_case-3.png)&lt;!-- --&gt;
-
-```r
-# Agregamos información sobre que células
-# tienen valores extremos
-sce.416b$discard &lt;- discard2
-
-# Haz esta gráfica para cada medida de
-# control de calidad (QC)
-plotColData(
-    sce.416b,
-    x = "block",
-    y = "sum",
-    colour_by = "discard",
-    other_fields = "phenotype"
-) +
-    facet_wrap( ~ phenotype) +
-    scale_y_log10()
-```
-
-![](03-quality-control_files/figure-html/use_case-4.png)&lt;!-- --&gt;
-
-```r
-# Otra gráfica de diagnóstico útil
-plotColData(
-    sce.416b,
-    x = "sum",
-    y = "subsets_Mito_percent",
-    colour_by = "discard",
-    other_fields = c("block", "phenotype")
-) +
-    facet_grid(block ~ phenotype)
-```
-
-![](03-quality-control_files/figure-html/use_case-5.png)&lt;!-- --&gt;
-
-]
-
-
----
+sce.416b &lt;- sce.416b[, !qc$discard]
 
-.scroll-output[
-
-
-```r
-library('BiocFileCache')
-bfc &lt;- BiocFileCache()
-raw.path &lt;-
-    bfcrpath(
-        bfc,
-        file.path(
-            "http://cf.10xgenomics.com/samples",
-            "cell-exp/2.1.0/pbmc4k/pbmc4k_raw_gene_bc_matrices.tar.gz"
-        )
-    )
-```
-
-```
-## adding rname 'http://cf.10xgenomics.com/samples/cell-exp/2.1.0/pbmc4k/pbmc4k_raw_gene_bc_matrices.tar.gz'
-```
-
-```r
-untar(raw.path, exdir = file.path(tempdir(), "pbmc4k"))
-
-library('DropletUtils')
-library('Matrix')
-```
-
-```
-## 
-## Attaching package: 'Matrix'
-```
-
-```
-## The following object is masked from 'package:S4Vectors':
-## 
-##     expand
-```
-
-```r
-fname &lt;- file.path(tempdir(), "pbmc4k/raw_gene_bc_matrices/GRCh38")
-sce.pbmc &lt;- read10xCounts(fname, col.names = TRUE)
-
-bcrank &lt;- barcodeRanks(counts(sce.pbmc))
-
-# Mostremos solo los puntos únicos para acelerar
-# el proceso de hacer esta gráfica
-uniq &lt;- !duplicated(bcrank$rank)
-plot(
-    bcrank$rank[uniq],
-    bcrank$total[uniq],
-    log = "xy",
-    xlab = "Rank",
-    ylab = "Total UMI count",
-    cex.lab = 1.2
-)
+# Normalización
+sce.416b &lt;- computeSumFactors(sce.416b)
+sce.416b &lt;- logNormCounts(sce.416b)
 ```
-
-```
-## Warning in xy.coords(x, y, xlabel, ylabel, log): 1 y value &lt;= 0 omitted from
-## logarithmic plot
-```
-
-```r
-abline(h = metadata(bcrank)$inflection,
-    col = "darkgreen",
-    lty = 2)
-abline(h = metadata(bcrank)$knee,
-    col = "dodgerblue",
-    lty = 2)
-legend(
-    "bottomleft",
-    legend = c("Inflection", "Knee"),
-    col = c("darkgreen", "dodgerblue"),
-    lty = 2,
-    cex = 1.2
-)
-```
-
-![](03-quality-control_files/figure-html/use_case_pbmc-1.png)&lt;!-- --&gt;
-
-```r
-set.seed(100)
-e.out &lt;- emptyDrops(counts(sce.pbmc))
-
-# Revisa ?emptyDrops para una explicación de porqué hay valores NA
-summary(e.out$FDR &lt;= 0.001)
-```
-
-```
-##    Mode   FALSE    TRUE    NA's 
-## logical    1056    4233  731991
-```
-
-```r
-set.seed(100)
-limit &lt;- 100
-all.out &lt;-
-    emptyDrops(counts(sce.pbmc), lower = limit, test.ambient = TRUE)
-# Idealmente, este histograma ddebería verse uniforme.
-# Picos grandes cerca de cero indican que los _barcodes_
-# con un número total de cuentas menor a "lower" no son
-# de origen ambiental.
-hist(all.out$PValue[all.out$Total &lt;= limit &amp;
-        all.out$Total &gt; 0],
-    xlab = "P-value",
-    main = "",
-    col = "grey80")
-```
-
-![](03-quality-control_files/figure-html/use_case_pbmc-2.png)&lt;!-- --&gt;
-
-```r
-sce.pbmc &lt;- sce.pbmc[, which(e.out$FDR &lt;= 0.001)]
-
-is.mito &lt;- grep("^MT-", rowData(sce.pbmc)$Symbol)
-sce.pmbc &lt;- addPerCellQC(sce.pbmc, subsets = list(MT = is.mito))
-discard.mito &lt;-
-    isOutlier(sce.pmbc$subsets_MT_percent, type = "higher")
-plot(
-    sce.pmbc$sum,
-    sce.pmbc$subsets_MT_percent,
-    log = "x",
-    xlab = "Total count",
-    ylab = "Mitochondrial %"
-)
-abline(h = attr(discard.mito, "thresholds")["higher"], col = "red")
-```
-
-![](03-quality-control_files/figure-html/use_case_pbmc-3.png)&lt;!-- --&gt;
 
 ]
 
@@ -867,49 +492,608 @@ abline(h = attr(discard.mito, "thresholds")["higher"], col = "red")
 
 --
 
-* ¿Por qué `emptyDrops()` regresa valores `NA`?
+* ¿Cómo determinamos cuales eran los genes mitocondriales?
 
 --
 
-* ¿Los valores p son iguales entre `e.out` y `all.out`?
+* ¿Cómo decidimos filtrar las células?
 
 --
 
-* ¿Son iguales si obtienes el subconjunto de valores que no son `NA`?
+* ¿Puedes explicar como normalizamos los datos?
 
 ???
 
-* Debajo de `lower` son considerados _droplets_ vacíos. Solo se usan para la correción estadística de pruebas múltiples.
-* No, debido a los `NA`s.
-* Sí: `identical(e.out$PValue[!is.na(e.out$FDR)], all.out$PValue[!is.na(e.out$FDR)])`
+* Ensembl v87 para ratón
+* Usamos el filtro de 3 desviaciones sobre la mediana (MAD) en la expresión mitocondrial además del porcentaje de expresión del ERCCC tomando en cuenta el grupo de muestras de secuenciación (batch).
+* Calculamos los factores de tamaño de librería con los parámetros de defecto sin ningún cambio extra.
 
 
 ---
 
+.scroll-output[
+
 
 ```r
-# Eliminemos las células de calidad baja
-# al quedarnos con las columnas del objeto sce que NO
-# queremos descartar (eso hace el !)
-filtered &lt;- sce.416b[,!discard2]
-# Alternativamente, podemos marcar
-# las células de baja calidad
-marked &lt;- sce.416b
-marked$discard &lt;- discard2
+# Varianza de las log-counts ---------------------------------------------------
+
+dec.pbmc &lt;- modelGeneVar(sce.pbmc)
+
+# Visualizemos la relación entre la media y la varianza
+fit.pbmc &lt;- metadata(dec.pbmc)
+plot(fit.pbmc$mean, fit.pbmc$var,
+    xlab = "Mean of log-expression",
+    ylab = "Variance of log-expression")
+curve(fit.pbmc$trend(x),
+    col = "dodgerblue",
+    add = TRUE,
+    lwd = 2)
 ```
 
+![](05-feature-selection_files/figure-html/all_code4-1.png)&lt;!-- --&gt;
+
+```r
+# Ordenemos por los genes más interesantes para checar
+# los datos
+dec.pbmc[order(dec.pbmc$bio, decreasing = TRUE), ]
+```
+
+```
+## DataFrame with 33694 rows and 6 columns
+##              mean     total      tech       bio      p.value          FDR
+##         &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;    &lt;numeric&gt;    &lt;numeric&gt;
+## LYZ       1.97770   5.11595  0.827277   4.28867 7.03222e-271 6.90916e-267
+## S100A9    1.94951   4.58859  0.827542   3.76105 9.35459e-209 6.12726e-205
+## S100A8    1.71828   4.45723  0.819402   3.63783 2.60470e-199 1.27956e-195
+## HLA-DRA   2.09694   3.72690  0.823663   2.90324 1.69876e-126 2.38433e-123
+## CD74      2.89840   3.30912  0.793203   2.51592 7.30211e-103 6.83269e-100
+## ...           ...       ...       ...       ...          ...          ...
+## PTMA      3.83013  0.471105  0.740525 -0.269420     0.993177            1
+## HLA-B     4.50161  0.475348  0.755807 -0.280459     0.994059            1
+## EIF1      3.24261  0.478352  0.771316 -0.292963     0.994987            1
+## TMSB4X    6.08483  0.408394  0.742840 -0.334446     0.998864            1
+## B2M       5.95481  0.304437  0.714661 -0.410224     0.999950            1
+```
+
+]
+
+---
+
+# Ejercicios
+
 --
 
-* ¿Cúal de estos objetos es más grande?
+* ¿Qué tipo de objeto nos regresó `modelGeneVar()`?
 
 --
 
-* ¿Cúal prefieres usar?
+* ¿`dec.pbmc` es una tabla? ¿O contiene mayor información?
+
+--
+
+* ¿Qué tipo de objeto es `fit.pbmc` y que objetos con nombres contiene?
+
+--
+
+* ¿Qué tipo de objeto es `fit.pbmc$trend`?
+
+--
+
+* ¿Donde podemos encontrar más detalles de esta función?
+
+--
 
 ???
 
-* `marked` es más grande que `filtered`
-* Yo prefiero usar `marked` si tengo suficiente memoria para usarlo.
+Respuestas
+
+* Es un `DFrame`
+* No, contiene más información dentro de `metadata(dec.pbmc)`
+* `class(metadata(dec.pbmc))` y `sapply(metadata(dec.pbmc), class)`
+* Una función
+* Checa `?fitTrendVar` y si quieres también checa el código fuente (para mí es muy útil este paso) https://github.com/MarioniLab/scran/blob/master/R/fitTrendVar.R
+
+
+---
+
+.scroll-output[
+
+
+```r
+# Coeficiente de variación -----------------------------------------------------
+dec.cv2.pbmc &lt;- modelGeneCV2(sce.pbmc)
+
+# Visualicemos la relación con la media
+fit.cv2.pbmc &lt;- metadata(dec.cv2.pbmc)
+plot(fit.cv2.pbmc$mean, fit.cv2.pbmc$cv2, log = "xy")
+```
+
+```
+## Warning in xy.coords(x, y, xlabel, ylabel, log): 14044 x values &lt;= 0 omitted
+## from logarithmic plot
+```
+
+```r
+curve(fit.cv2.pbmc$trend(x),
+    col = "dodgerblue",
+    add = TRUE,
+    lwd = 2)
+```
+
+![](05-feature-selection_files/figure-html/all_code5-1.png)&lt;!-- --&gt;
+
+```r
+# Ordenemos por los genes más interesantes para checar
+# los datos
+dec.cv2.pbmc[order(dec.cv2.pbmc$ratio, decreasing = TRUE), ]
+```
+
+```
+## DataFrame with 33694 rows and 6 columns
+##                 mean     total     trend     ratio   p.value       FDR
+##            &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+## HIST1H2AC  0.9045169   267.718   1.55979  171.6372         0         0
+## GNG11      0.6905688   219.323   1.98064  110.7334         0         0
+## PRTFDC1    0.0412511  3034.952  29.98682  101.2096         0         0
+## TNNC2      0.1021577  1210.585  12.22872   98.9952         0         0
+## PF4        1.1083758   128.809   1.30995   98.3316         0         0
+## ...              ...       ...       ...       ...       ...       ...
+## AC023491.2         0       NaN       Inf       NaN       NaN       NaN
+## AC233755.2         0       NaN       Inf       NaN       NaN       NaN
+## AC233755.1         0       NaN       Inf       NaN       NaN       NaN
+## AC213203.1         0       NaN       Inf       NaN       NaN       NaN
+## FAM231B            0       NaN       Inf       NaN       NaN       NaN
+```
+
+]
+
+---
+
+.scroll-output[
+
+
+```r
+# En la presencia de muestras técnicas añadidas (spike-ins) --------------------
+
+dec.spike.416b &lt;- modelGeneVarWithSpikes(sce.416b, "ERCC")
+# Ordenemos por los genes más interesantes para checar
+# los datos
+dec.spike.416b[order(dec.spike.416b$bio, decreasing = TRUE), ]
+```
+
+```
+## DataFrame with 46604 rows and 6 columns
+##               mean     total      tech       bio      p.value          FDR
+##          &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;    &lt;numeric&gt;    &lt;numeric&gt;
+## Lyz2       6.61097   13.8497   1.57131   12.2784 1.48993e-186 1.54156e-183
+## Ccl9       6.67846   13.1869   1.50035   11.6866 2.21856e-185 2.19979e-182
+## Top2a      5.81024   14.1787   2.54776   11.6310  3.80016e-65  1.13040e-62
+## Cd200r3    4.83180   15.5613   4.22984   11.3314  9.46221e-24  6.08574e-22
+## Ccnb2      5.97776   13.1393   2.30177   10.8375  3.68706e-69  1.20193e-66
+## ...            ...       ...       ...       ...          ...          ...
+## Rpl5-ps2   3.60625  0.612623   6.32853  -5.71590     0.999616     0.999726
+## Gm11942    3.38768  0.798570   6.51473  -5.71616     0.999459     0.999726
+## Gm12816    2.91276  0.838670   6.57364  -5.73497     0.999422     0.999726
+## Gm13623    2.72844  0.708071   6.45448  -5.74641     0.999544     0.999726
+## Rps12l1    3.15420  0.746615   6.59332  -5.84670     0.999522     0.999726
+```
+
+```r
+# In the absence of spike-ins --------------------------------------------------
+
+set.seed(0010101)
+dec.pois.pbmc &lt;- modelGeneVarByPoisson(sce.pbmc)
+# Ordenemos por los genes más interesantes para checar
+# los datos
+dec.pois.pbmc[order(dec.pois.pbmc$bio, decreasing = TRUE), ]
+```
+
+```
+## DataFrame with 33694 rows and 6 columns
+##              mean     total      tech        bio   p.value       FDR
+##         &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;  &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
+## LYZ       1.97770   5.11595  0.621547    4.49440         0         0
+## S100A9    1.94951   4.58859  0.627306    3.96128         0         0
+## S100A8    1.71828   4.45723  0.669428    3.78781         0         0
+## HLA-DRA   2.09694   3.72690  0.596372    3.13053         0         0
+## CD74      2.89840   3.30912  0.422624    2.88650         0         0
+## ...           ...       ...       ...        ...       ...       ...
+## ATP5J    0.619524  0.455659  0.507720 -0.0520614  0.947965         1
+## NEDD8    0.846016  0.561648  0.614758 -0.0531099  0.914573         1
+## NDUFA1   0.866546  0.561477  0.621858 -0.0603808  0.938119         1
+## SAP18    0.765422  0.515946  0.582614 -0.0666679  0.965154         1
+## SUMO2    1.361306  0.618400  0.698946 -0.0805452  0.966130         1
+```
+
+```r
+# Considerando factores experimentales -----------------------------------------
+
+dec.block.416b &lt;- modelGeneVarWithSpikes(sce.416b, "ERCC",
+    block = sce.416b$block)
+dec.block.416b[order(dec.block.416b$bio, decreasing = TRUE), ]
+```
+
+```
+## DataFrame with 46604 rows and 7 columns
+##               mean     total      tech       bio      p.value          FDR
+##          &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;    &lt;numeric&gt;    &lt;numeric&gt;
+## Lyz2       6.61235   13.8619   1.58416   12.2777  0.00000e+00  0.00000e+00
+## Ccl9       6.67841   13.2599   1.44553   11.8143  0.00000e+00  0.00000e+00
+## Top2a      5.81275   14.0192   2.74571   11.2734 3.89855e-137 8.43398e-135
+## Cd200r3    4.83305   15.5909   4.31892   11.2719  1.17783e-54  7.00721e-53
+## Ccnb2      5.97999   13.0256   2.46647   10.5591 1.20380e-151 2.98405e-149
+## ...            ...       ...       ...       ...          ...          ...
+## Gm12816    2.91299  0.842574   6.67730  -5.83472     0.999989     0.999999
+## Gm5786     2.90717  0.879485   6.71686  -5.83738     0.999994     0.999999
+## Rpl9-ps4   3.26421  0.807057   6.64932  -5.84226     0.999988     0.999999
+## Gm13623    2.72788  0.700296   6.63875  -5.93845     0.999998     0.999999
+## Rps12l1    3.15425  0.750775   6.70033  -5.94955     0.999995     0.999999
+##                                                          per.block
+##                                                        &lt;DataFrame&gt;
+## Lyz2       6.35652:13.3748:2.08227:...:6.86819:14.3490:1.08605:...
+## Ccl9       6.68726:13.0778:1.65923:...:6.66956:13.4420:1.23184:...
+## Top2a      5.34891:17.5972:3.91642:...:6.27659:10.4411:1.57501:...
+## Cd200r3    4.60115:15.7870:5.55587:...:5.06496:15.3948:3.08197:...
+## Ccnb2      5.56701:15.4150:3.46931:...:6.39298:10.6362:1.46362:...
+## ...                                                            ...
+## Gm12816  2.86995:0.624143:7.43036:...:2.95604:1.061004:5.92424:...
+## Gm5786   2.96006:0.902872:7.49911:...:2.85427:0.856098:5.93462:...
+## Rpl9-ps4 3.60690:0.543276:7.36805:...:2.92151:1.070839:5.93058:...
+## Gm13623  2.83129:0.852901:7.39442:...:2.62447:0.547692:5.88308:...
+## Rps12l1  3.14399:0.716670:7.57246:...:3.16452:0.784881:5.82819:...
+```
+
+```r
+dec.block.416b$per.block
+```
+
+```
+## DataFrame with 46604 rows and 2 columns
+##                              20160113                       20160325
+##                           &lt;DataFrame&gt;                    &lt;DataFrame&gt;
+## 1     0.0000000:0.00000:0.0000000:...                      0:0:0:...
+## 2     0.0000000:0.00000:0.0000000:...                      0:0:0:...
+## 3     0.0000000:0.00000:0.0000000:...                      0:0:0:...
+## 4     0.0000000:0.00000:0.0000000:...                      0:0:0:...
+## 5     0.0158182:0.02327:0.0754413:...                      0:0:0:...
+## ...                               ...                            ...
+## 46600   0.0000:0.00000:0.00000000:...  0.0000:0.00000:0.00000000:...
+## 46601   0.0000:0.00000:0.00000000:...  0.0000:0.00000:0.00000000:...
+## 46602   0.0000:0.00000:0.00000000:...  0.0000:0.00000:0.00000000:...
+## 46603   0.0000:0.00000:0.00000000:...  0.0000:0.00000:0.00000000:...
+## 46604  14.8189:2.90986:0.00884549:... 15.2007:3.41768:0.00618922:...
+```
+
+```r
+dec.block.416b$per.block$X20160113
+```
+
+```
+## NULL
+```
+
+---
+
+# Ejercicios
+
+--
+
+* ¿Qué tipo de objeto es `dec.block.416b$per.block`?
+
+???
+
+* `class(dec.block.416b$per.block)` es un `DataFrame` con 2 columnas, donde cada una es a la vez un `DataFrame`
+
+
+]
+
+---
+
+.scroll-output[
+
+
+```r
+# Seleccionando los genes altamente variables (HVG) ----------------------------
+
+# Utiliza modelGeneVar() detrás de cámaras
+hvg.pbmc.var &lt;- getTopHVGs(dec.pbmc, n = 1000)
+str(hvg.pbmc.var)
+```
+
+```
+##  chr [1:1000] "LYZ" "S100A9" "S100A8" "HLA-DRA" "CD74" "CST3" "TYROBP" ...
+```
+
+```r
+# Utiliza modelGeneVarWithSpikes() detrás de cámaras
+hvg.416b.var &lt;- getTopHVGs(dec.spike.416b, n = 1000)
+str(hvg.416b.var)
+```
+
+```
+##  chr [1:1000] "Lyz2" "Ccl9" "Top2a" "Cd200r3" "Ccnb2" "Gm10736" "Hbb-bt" ...
+```
+
+```r
+# O utiliza modelGeneCV2() al especificar `var.field`
+hvg.pbmc.cv2 &lt;- getTopHVGs(dec.cv2.pbmc,
+    var.field = "ratio", n = 1000)
+str(hvg.pbmc.cv2)
+```
+
+```
+##  chr [1:1000] "HIST1H2AC" "GNG11" "PRTFDC1" "TNNC2" "PF4" "HGD" "PPBP" ...
+```
+
+]
+
+---
+
+# Ejercicios
+
+--
+
+* ¿Qué porcentaje de los genes altamente variables (HVG) se sobrelapan entre los dos sets de pbmc?
+
+--
+
+* Extra: haz un diagrama de venn de los 2 conjuntos de genes HVG de pbmc
+
+???
+
+* `table(hvg.pbmc.var %in% hvg.pbmc.cv2)`
+
+---
+
+.scroll-output[
+
+* Busca código de R escrito por otrxs, por ejemplo: https://github.com/LieberInstitute/brainseq_phase2/search?p=2&amp;q=venn&amp;unscoped_q=venn
+
+
+```r
+if (!requireNamespace("gplots", quietly = TRUE))
+    install.packages("gplots")
+
+if (!requireNamespace("VennDiagram", quietly = TRUE))
+    BiocManager::install("VennDiagram")
+
+## Un diagrama de venn rápido pero sencillo
+gplots::venn(list('var' = hvg.pbmc.var, 'cv2' = hvg.pbmc.cv2))
+```
+
+![](05-feature-selection_files/figure-html/all_code7b-1.png)&lt;!-- --&gt;
+
+```r
+## Otro más bonito pero más complejo
+v &lt;- VennDiagram::venn.diagram(
+    list('var' = hvg.pbmc.var, 'cv2' = hvg.pbmc.cv2),
+    filename = NULL,
+    fill = c('forest green', 'orange')
+    
+)
+grid::grid.newpage()
+grid::grid.draw(v)
+```
+
+![](05-feature-selection_files/figure-html/all_code7b-2.png)&lt;!-- --&gt;
+
+]
+
+---
+
+.scroll-output[
+
+
+```r
+# Seleccionando los HVGs usando significancia estadística ----------------------
+
+# Utiliza modelGeneVar() detrás de cámaras
+hvg.pbmc.var.2 &lt;- getTopHVGs(dec.pbmc, fdr.threshold = 0.05)
+str(hvg.pbmc.var.2)
+```
+
+```
+##  chr [1:651] "LYZ" "S100A9" "S100A8" "HLA-DRA" "CD74" "CST3" "TYROBP" ...
+```
+
+```r
+# Utiliza modelGeneVarWithSpikes() detrás de cámaras
+hvg.416b.var.2 &lt;- getTopHVGs(dec.spike.416b,
+    fdr.threshold = 0.05)
+str(hvg.416b.var.2)
+```
+
+```
+##  chr [1:2568] "Lyz2" "Ccl9" "Top2a" "Cd200r3" "Ccnb2" "Gm10736" "Hbb-bt" ...
+```
+
+```r
+# O utiliza modelGeneCV2() al especificar `var.field`
+hvg.pbmc.cv2.2 &lt;- getTopHVGs(dec.cv2.pbmc,
+    var.field = "ratio", fdr.threshold = 0.05)
+str(hvg.pbmc.cv2.2)
+```
+
+```
+##  chr [1:1699] "HIST1H2AC" "GNG11" "PRTFDC1" "TNNC2" "PF4" "HGD" "PPBP" ...
+```
+
+]
+
+---
+
+# Ejercicios
+
+--
+
+* ¿Qué lista de HVGs de pbmc es más larga?
+
+--
+
+* Haz un diagrama de venn con estas listas de HVGs de pbmc.
+
+???
+
+* `hvg.pbmc.cv2.2`
+
+
+---
+
+.scroll-output[
+
+
+```r
+# Seleccionando como HVGs a los genes arriba de la curva -----------------------
+
+# Utiliza modelGeneVar() detrás de cámaras
+hvg.pbmc.var.3 &lt;- getTopHVGs(dec.pbmc, var.threshold = 0)
+str(hvg.pbmc.var.3)
+```
+
+```
+##  chr [1:12792] "LYZ" "S100A9" "S100A8" "HLA-DRA" "CD74" "CST3" "TYROBP" ...
+```
+
+```r
+# Utiliza modelGeneVarWithSpikes() detrás de cámaras
+hvg.416b.var.3 &lt;- getTopHVGs(dec.spike.416b,
+    var.threshold = 0)
+str(hvg.416b.var.3)
+```
+
+```
+##  chr [1:11087] "Lyz2" "Ccl9" "Top2a" "Cd200r3" "Ccnb2" "Gm10736" "Hbb-bt" ...
+```
+
+```r
+# O utiliza modelGeneCV2() al especificar `var.field` and
+# value of `var.threshold`
+hvg.pbmc.cv2.3 &lt;- getTopHVGs(dec.cv2.pbmc,
+    var.field = "ratio", var.threshold = 1)
+str(hvg.pbmc.cv2.2)
+```
+
+```
+##  chr [1:1699] "HIST1H2AC" "GNG11" "PRTFDC1" "TNNC2" "PF4" "HGD" "PPBP" ...
+```
+
+]
+
+---
+
+.scroll-output[
+
+
+```r
+# Usando todo al mismo tiempo --------------------------------------------------
+
+dec.pbmc &lt;- modelGeneVar(sce.pbmc)
+chosen &lt;- getTopHVGs(dec.pbmc, prop = 0.1)
+str(chosen)
+```
+
+```
+##  chr [1:1279] "LYZ" "S100A9" "S100A8" "HLA-DRA" "CD74" "CST3" "TYROBP" ...
+```
+
+```r
+# Seleccionando el subconjunto de HVGs -----------------------------------------
+
+sce.pbmc.hvg &lt;- sce.pbmc[chosen, ]
+sce.pbmc.hvg
+```
+
+```
+## class: SingleCellExperiment 
+## dim: 1279 3922 
+## metadata(1): Samples
+## assays(2): counts logcounts
+## rownames(1279): LYZ S100A9 ... HIST1H2BN TTC39C
+## rowData names(2): ID Symbol
+## colnames(3922): AAACCTGAGAAGGCCT-1 AAACCTGAGACAGACC-1 ...
+##   TTTGTCACAGGTCCAC-1 TTTGTCATCCCAAGAT-1
+## colData names(3): Sample Barcode sizeFactor
+## reducedDimNames(0):
+## altExpNames(0):
+```
+
+```r
+# Especificando los HVGs en funciones posteriores ------------------------------
+
+# Ejemplo de como especificar los HVGs en funciones posteriores
+# Realizar el PCA usando solo los HVGs de "chosen"
+sce.pbmc &lt;- runPCA(sce.pbmc, subset_row = chosen)
+sce.pbmc
+```
+
+```
+## class: SingleCellExperiment 
+## dim: 33694 3922 
+## metadata(1): Samples
+## assays(2): counts logcounts
+## rownames(33694): RP11-34P13.3 FAM138A ... AC213203.1 FAM231B
+## rowData names(2): ID Symbol
+## colnames(3922): AAACCTGAGAAGGCCT-1 AAACCTGAGACAGACC-1 ...
+##   TTTGTCACAGGTCCAC-1 TTTGTCATCCCAAGAT-1
+## colData names(3): Sample Barcode sizeFactor
+## reducedDimNames(1): PCA
+## altExpNames(0):
+```
+
+```r
+# Brujeria ---------------------------------------------------------------------
+
+# Agrega tu SCE principal al SCE del subconjunto de HVGs
+altExp(sce.pbmc.hvg, "original") &lt;- sce.pbmc
+sce.pbmc.hvg
+```
+
+```
+## class: SingleCellExperiment 
+## dim: 1279 3922 
+## metadata(1): Samples
+## assays(2): counts logcounts
+## rownames(1279): LYZ S100A9 ... HIST1H2BN TTC39C
+## rowData names(2): ID Symbol
+## colnames(3922): AAACCTGAGAAGGCCT-1 AAACCTGAGACAGACC-1 ...
+##   TTTGTCACAGGTCCAC-1 TTTGTCATCCCAAGAT-1
+## colData names(3): Sample Barcode sizeFactor
+## reducedDimNames(0):
+## altExpNames(1): original
+```
+
+```r
+altExp(sce.pbmc.hvg, "original")
+```
+
+```
+## class: SingleCellExperiment 
+## dim: 33694 3922 
+## metadata(1): Samples
+## assays(2): counts logcounts
+## rownames(33694): RP11-34P13.3 FAM138A ... AC213203.1 FAM231B
+## rowData names(2): ID Symbol
+## colnames(3922): AAACCTGAGAAGGCCT-1 AAACCTGAGACAGACC-1 ...
+##   TTTGTCACAGGTCCAC-1 TTTGTCATCCCAAGAT-1
+## colData names(3): Sample Barcode sizeFactor
+## reducedDimNames(1): PCA
+## altExpNames(0):
+```
+
+]
+
+---
+
+# Ejercicios
+
+--
+
+* ¿Cómo le dijimos a `runPCA()` cuales eran los genes altamente variables?
+
+???
+
+* A través del argumento `subset_row`.
+
 
 ---
 
@@ -958,7 +1142,7 @@ sessioninfo::session_info()
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       America/New_York            
-##  date     2020-08-04                  
+##  date     2020-08-05                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  package                * version  date       lib source                            
@@ -982,11 +1166,11 @@ sessioninfo::session_info()
 ##  bit64                    4.0.2    2020-07-30 [1] CRAN (R 4.0.2)                    
 ##  bitops                   1.0-6    2013-08-17 [1] CRAN (R 4.0.0)                    
 ##  blob                     1.2.1    2020-01-20 [1] CRAN (R 4.0.0)                    
+##  caTools                  1.18.0   2020-01-17 [1] CRAN (R 4.0.0)                    
 ##  cli                      2.0.2    2020-02-28 [1] CRAN (R 4.0.0)                    
 ##  codetools                0.2-16   2018-12-24 [1] CRAN (R 4.0.2)                    
 ##  colorout               * 1.2-2    2020-03-16 [1] Github (jalvesaq/colorout@726d681)
 ##  colorspace               1.4-1    2019-03-18 [1] CRAN (R 4.0.0)                    
-##  cowplot                  1.0.0    2019-07-11 [1] CRAN (R 4.0.2)                    
 ##  crayon                   1.3.4    2017-09-16 [1] CRAN (R 4.0.0)                    
 ##  curl                     4.3      2019-12-02 [1] CRAN (R 4.0.0)                    
 ##  DBI                      1.1.0    2019-12-15 [1] CRAN (R 4.0.0)                    
@@ -999,12 +1183,16 @@ sessioninfo::session_info()
 ##  DropletUtils           * 1.8.0    2020-04-27 [1] Bioconductor                      
 ##  edgeR                    3.30.3   2020-06-02 [1] Bioconductor                      
 ##  ellipsis                 0.3.1    2020-05-15 [1] CRAN (R 4.0.0)                    
+##  EnsDb.Hsapiens.v86     * 2.99.0   2020-08-04 [1] Bioconductor                      
 ##  ensembldb              * 2.12.1   2020-05-06 [1] Bioconductor                      
 ##  evaluate                 0.14     2019-05-28 [1] CRAN (R 4.0.0)                    
 ##  ExperimentHub            1.14.0   2020-04-27 [1] Bioconductor                      
 ##  fansi                    0.4.1    2020-01-08 [1] CRAN (R 4.0.0)                    
-##  farver                   2.0.3    2020-01-16 [1] CRAN (R 4.0.0)                    
 ##  fastmap                  1.0.1    2019-10-08 [1] CRAN (R 4.0.0)                    
+##  formatR                  1.7      2019-06-11 [1] CRAN (R 4.0.0)                    
+##  futile.logger            1.4.3    2016-07-10 [1] CRAN (R 4.0.0)                    
+##  futile.options           1.0.1    2018-04-20 [1] CRAN (R 4.0.0)                    
+##  gdata                    2.18.0   2017-06-06 [1] CRAN (R 4.0.0)                    
 ##  generics                 0.0.2    2018-11-29 [1] CRAN (R 4.0.0)                    
 ##  GenomeInfoDb           * 1.24.2   2020-06-15 [1] Bioconductor                      
 ##  GenomeInfoDbData         1.2.3    2020-04-16 [1] Bioconductor                      
@@ -1014,18 +1202,22 @@ sessioninfo::session_info()
 ##  ggbeeswarm               0.6.0    2017-08-07 [1] CRAN (R 4.0.0)                    
 ##  ggplot2                * 3.3.2    2020-06-19 [1] CRAN (R 4.0.2)                    
 ##  glue                     1.4.1    2020-05-13 [1] CRAN (R 4.0.0)                    
+##  gplots                   3.0.4    2020-07-05 [1] CRAN (R 4.0.2)                    
 ##  gridExtra                2.3      2017-09-09 [1] CRAN (R 4.0.0)                    
 ##  gtable                   0.3.0    2019-03-25 [1] CRAN (R 4.0.0)                    
+##  gtools                   3.8.2    2020-03-31 [1] CRAN (R 4.0.0)                    
 ##  HDF5Array                1.16.1   2020-06-16 [1] Bioconductor                      
 ##  hms                      0.5.3    2020-01-08 [1] CRAN (R 4.0.0)                    
 ##  htmltools                0.5.0    2020-06-16 [1] CRAN (R 4.0.2)                    
 ##  httpuv                   1.5.4    2020-06-06 [1] CRAN (R 4.0.2)                    
 ##  httr                     1.4.2    2020-07-20 [1] CRAN (R 4.0.2)                    
+##  igraph                   1.2.5    2020-03-19 [1] CRAN (R 4.0.0)                    
 ##  interactiveDisplayBase   1.26.3   2020-06-02 [1] Bioconductor                      
 ##  IRanges                * 2.22.2   2020-05-21 [1] Bioconductor                      
 ##  irlba                    2.3.3    2019-02-05 [1] CRAN (R 4.0.0)                    
+##  KernSmooth               2.23-17  2020-04-26 [1] CRAN (R 4.0.2)                    
 ##  knitr                    1.29     2020-06-23 [1] CRAN (R 4.0.0)                    
-##  labeling                 0.3      2014-08-23 [1] CRAN (R 4.0.0)                    
+##  lambda.r                 1.2.4    2019-09-18 [1] CRAN (R 4.0.0)                    
 ##  later                    1.1.0.1  2020-06-05 [1] CRAN (R 4.0.2)                    
 ##  lattice                  0.20-41  2020-04-02 [1] CRAN (R 4.0.2)                    
 ##  lazyeval                 0.2.2    2019-03-15 [1] CRAN (R 4.0.0)                    
@@ -1064,12 +1256,14 @@ sessioninfo::session_info()
 ##  S4Vectors              * 0.26.1   2020-05-16 [1] Bioconductor                      
 ##  scales                   1.1.1    2020-05-11 [1] CRAN (R 4.0.0)                    
 ##  scater                 * 1.16.2   2020-06-26 [1] Bioconductor                      
+##  scran                  * 1.16.0   2020-04-27 [1] Bioconductor                      
 ##  scRNAseq               * 2.2.0    2020-05-07 [1] Bioconductor                      
 ##  sessioninfo              1.1.1    2018-11-05 [1] CRAN (R 4.0.2)                    
 ##  shiny                    1.5.0    2020-06-23 [1] CRAN (R 4.0.2)                    
 ##  showtext                 0.8-1    2020-05-25 [1] CRAN (R 4.0.2)                    
 ##  showtextdb               3.0      2020-06-04 [1] CRAN (R 4.0.2)                    
 ##  SingleCellExperiment   * 1.10.1   2020-04-28 [1] Bioconductor                      
+##  statmod                  1.4.34   2020-02-17 [1] CRAN (R 4.0.0)                    
 ##  stringi                  1.4.6    2020-02-17 [1] CRAN (R 4.0.0)                    
 ##  stringr                  1.4.0    2019-02-10 [1] CRAN (R 4.0.0)                    
 ##  SummarizedExperiment   * 1.18.2   2020-07-14 [1] Bioconductor                      
@@ -1077,6 +1271,7 @@ sessioninfo::session_info()
 ##  tibble                   3.0.3    2020-07-10 [1] CRAN (R 4.0.2)                    
 ##  tidyselect               1.1.0    2020-05-11 [1] CRAN (R 4.0.2)                    
 ##  vctrs                    0.3.2    2020-07-15 [1] CRAN (R 4.0.2)                    
+##  VennDiagram              1.6.20   2018-03-28 [1] CRAN (R 4.0.0)                    
 ##  vipor                    0.4.5    2017-03-22 [1] CRAN (R 4.0.0)                    
 ##  viridis                  0.5.1    2018-03-29 [1] CRAN (R 4.0.0)                    
 ##  viridisLite              0.3.0    2018-02-01 [1] CRAN (R 4.0.0)                    
@@ -1092,6 +1287,7 @@ sessioninfo::session_info()
 ##  zlibbioc                 1.34.0   2020-04-27 [1] Bioconductor                      
 ## 
 ## [1] /Library/Frameworks/R.framework/Versions/4.0/Resources/library
+## [2] /Library/Frameworks/R.framework/Versions/4.0branch/Resources/library
 ```
 
 

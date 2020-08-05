@@ -72,7 +72,7 @@ pre {
 
 # Diapositivas de Peter Hickey
 
-View them [here](https://docs.google.com/presentation/d/1pIiA7fZd1GBxaKQpzT2sPn7C6fIZxEJ8NI4p3UtoIOo/edit#slide=id.p)
+Ve las diapositivas [aquí](https://docs.google.com/presentation/d/1pIiA7fZd1GBxaKQpzT2sPn7C6fIZxEJ8NI4p3UtoIOo/edit#slide=id.p)
 
 ---
 

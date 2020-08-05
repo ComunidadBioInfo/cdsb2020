@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Reducción de dimensiones</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Leonardo Collado-Torres" />
+    <meta name="date" content="2020-08-05" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-137796972-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'UA-137796972-1');
+    </script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# <strong>Reducción de dimensiones </strong>
+## <strong>Bioconductor</strong> para datos transcriptómicos de célula única (<strong>scRNA-seq</strong>) – <strong>CDSB2020</strong>
+### <a href="http://lcolladotor.github.io/">Leonardo Collado-Torres</a>
+### 2020-08-05
+
+---
+
+
+
+
+
+
+class: inverse
+
+.center[
+
+&lt;a href="https://osca.bioconductor.org/"&gt;&lt;img src="https://raw.githubusercontent.com/Bioconductor/OrchestratingSingleCellAnalysis-release/master/images/cover.png" style="width: 30%"/&gt;&lt;/a&gt;
+
+&lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;&lt;img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"&gt;Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License&lt;/a&gt;.
+
+&lt;a href='https://clustrmaps.com/site/1b5pl'  title='Visit tracker'&gt;&lt;img src='//clustrmaps.com/map_v2.png?cl=ffffff&amp;w=150&amp;t=n&amp;d=rP3KLyAMuzVNcJFL-_C-B0XnLNVy8Sp6a8HDaKEnSzc'/&gt;&lt;/a&gt;
+
+]
+
+.footnote[Descarga los materiales con `usethis::use_course('comunidadbioinfo/cdsb2020')` o revisalos en línea vía [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).]
+
+&lt;style type="text/css"&gt;
+/* From https://github.com/yihui/xaringan/issues/147  */
+.scroll-output {
+  height: 80%;
+  overflow-y: scroll;
+}
+
+/* https://stackoverflow.com/questions/50919104/horizontally-scrollable-output-on-xaringan-slides */
+pre {
+  max-width: 100%;
+  overflow-x: scroll;
+}
+
+/* From https://github.com/yihui/xaringan/wiki/Font-Size */
+.tiny{
+  font-size: 40%
+}
+
+/* From https://github.com/yihui/xaringan/wiki/Title-slide */
+.title-slide {
+  background-image: url(https://raw.githubusercontent.com/Bioconductor/OrchestratingSingleCellAnalysis/master/images/Workflow.png);
+  background-size: 33%;
+  background-position: 0% 100%
+}
+&lt;/style&gt;
+
+---
+
+# Diapositivas de Peter Hickey
+
+Ve las diapositivas [aquí](https://docs.google.com/presentation/d/12CjvQ1beZVeCcMQqD6ptzd9YUHbHOksvy3lt_rvWyRs/edit)
+
+
+---
+
+class: middle
+
+.center[
+
+# ¡Gracias!
+
+Las diapositivias fueron hechas con el paquete de R [**xaringan**](https://github.com/yihui/xaringan) y configuradas con [**xaringanthemer**](https://github.com/gadenbuie/xaringanthemer).
+
+Este curso está basado en el libro [**Orchestrating Single Cell Analysis with Bioconductor**](https://osca.bioconductor.org/) de [Aaron Lun](https://www.linkedin.com/in/aaron-lun-869b5894/), [Robert Amezquita](https://robertamezquita.github.io/), [Stephanie Hicks](https://www.stephaniehicks.com/) y [Raphael Gottardo](http://rglab.org), además del [**curso de scRNA-seq para WEHI**](https://drive.google.com/drive/folders/1cn5d-Ey7-kkMiex8-74qxvxtCQT6o72h) creado por [Peter Hickey](https://www.peterhickey.org/).
+
+Puedes encontrar los archivos para este taller en  [comunidadbioinfo/cdsb2020](https://github.com/comunidadbioinfo/cdsb2020). 
+
+Instructor: [**Leonardo Collado-Torres**](http://lcolladotor.github.io/).
+
+&lt;a href="https://www.libd.org"&gt;&lt;img src="img/LIBD_logo.jpg" style="width: 20%" /&gt;&lt;/a&gt;
+
+]
+
+.footnote[Descarga los materiales con `usethis::use_course('comunidadbioinfo/cdsb2020')` o revisalos en línea vía [**comunidadbioinfo.github.io/cdsb2020**](http://comunidadbioinfo.github.io/cdsb2020).]
+
+---
+
+# Detalles de la sesión de R
+
+
+.scroll-output[
+.tiny[
+
+
+```r
+options(width = 120)
+sessioninfo::session_info()
+```
+
+```
+## ─ Session info ───────────────────────────────────────────────────────────────────────────────────────────────────────
+##  setting  value                       
+##  version  R version 4.0.2 (2020-06-22)
+##  os       macOS Catalina 10.15.5      
+##  system   x86_64, darwin17.0          
+##  ui       X11                         
+##  language (EN)                        
+##  collate  en_US.UTF-8                 
+##  ctype    en_US.UTF-8                 
+##  tz       America/New_York            
+##  date     2020-08-05                  
+## 
+## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────
+##  package        * version date       lib source                            
+##  assertthat       0.2.1   2019-03-21 [1] CRAN (R 4.0.0)                    
+##  cli              2.0.2   2020-02-28 [1] CRAN (R 4.0.0)                    
+##  colorout       * 1.2-2   2020-03-16 [1] Github (jalvesaq/colorout@726d681)
+##  crayon           1.3.4   2017-09-16 [1] CRAN (R 4.0.0)                    
+##  digest           0.6.25  2020-02-23 [1] CRAN (R 4.0.0)                    
+##  evaluate         0.14    2019-05-28 [1] CRAN (R 4.0.0)                    
+##  fansi            0.4.1   2020-01-08 [1] CRAN (R 4.0.0)                    
+##  glue             1.4.1   2020-05-13 [1] CRAN (R 4.0.0)                    
+##  htmltools        0.5.0   2020-06-16 [1] CRAN (R 4.0.2)                    
+##  knitr            1.29    2020-06-23 [1] CRAN (R 4.0.0)                    
+##  magrittr         1.5     2014-11-22 [1] CRAN (R 4.0.0)                    
+##  purrr            0.3.4   2020-04-17 [1] CRAN (R 4.0.0)                    
+##  rlang            0.4.7   2020-07-09 [1] CRAN (R 4.0.2)                    
+##  rmarkdown        2.3     2020-06-18 [1] CRAN (R 4.0.0)                    
+##  sessioninfo      1.1.1   2018-11-05 [1] CRAN (R 4.0.2)                    
+##  showtext         0.8-1   2020-05-25 [1] CRAN (R 4.0.2)                    
+##  showtextdb       3.0     2020-06-04 [1] CRAN (R 4.0.2)                    
+##  stringi          1.4.6   2020-02-17 [1] CRAN (R 4.0.0)                    
+##  stringr          1.4.0   2019-02-10 [1] CRAN (R 4.0.0)                    
+##  sysfonts         0.8.1   2020-05-08 [1] CRAN (R 4.0.0)                    
+##  whisker          0.4     2019-08-28 [1] CRAN (R 4.0.0)                    
+##  withr            2.2.0   2020-04-20 [1] CRAN (R 4.0.0)                    
+##  xaringan         0.16    2020-03-31 [1] CRAN (R 4.0.0)                    
+##  xaringanthemer * 0.3.0   2020-05-04 [1] CRAN (R 4.0.0)                    
+##  xfun             0.16    2020-07-24 [1] CRAN (R 4.0.2)                    
+##  yaml             2.2.1   2020-02-01 [1] CRAN (R 4.0.0)                    
+## 
+## [1] /Library/Frameworks/R.framework/Versions/4.0/Resources/library
+## [2] /Library/Frameworks/R.framework/Versions/4.0branch/Resources/library
+```
+
+
+]]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
