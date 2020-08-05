@@ -58,9 +58,8 @@ Día 3
   - Actividades para construir la comunidad
   - Presentación del material para scRNA-seq
 
-Días 4
+Día 4
 
-  - Introducción a scRNA-seq
   - Introducción a scRNA-seq con Bioconductor
   - Estructura e importe de datos
   - Control de calidad
@@ -109,7 +108,7 @@ Día 5
 | 09:00-10:30               | [Buenas prácticas de configuración y mantenimiento de espacios de trabajo](presentaciones_flujos-de-trabajo/Mantenimiento.pdf)                               | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf)                                                                                                                                                                                                                                      |
 | 10:30-11:00               | Foto/video remoto                                                                                                                                            |                                                                                                                                                                                                                                                                                                              |
 | 11:00-11:30               | Descanso                                                                                                                                                     |                                                                                                                                                                                                                                                                                                              |
-| 11:30-12:30               | Instalación de paqueterías desde código fuente                                                                                                               | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf)                                                                                                                                                                                                                                      |
+| 11:30-12:30               | [Instalación de paqueterías desde código fuente](presentaciones_flujos-de-trabajo/Instalacion-desde-la-fuente.pdf)                                           | [Joselyn Chávez](http://comunidadbioinfo.github.io/authors/josschavezf)                                                                                                                                                                                                                                      |
 | 12:30-14:00               | Visión general del procesamiento de datos de scRNA-seq                                                                                                       | [Alejandra Medina-Rivera](http://comunidadbioinfo.github.io/authors/amedina/)                                                                                                                                                                                                                                |
 | 14:00-15:30               | Descanso: comida                                                                                                                                             |                                                                                                                                                                                                                                                                                                              |
 | 15:30-17:00               | Actividades para construir la comunidad                                                                                                                      |                                                                                                                                                                                                                                                                                                              |
@@ -188,11 +187,17 @@ remotes::install_cran(
   c("tidyverse", "devtools", "here", "fs", "cowsay")
 )
 
+## Opcional: praiseMX para usarlo en un ejercicio en vez de cowsay
+## https://github.com/ComunidadBioInfo/praiseMX
+remotes::install_github("comunidadbioinfo/praiseMX")
+```
+
+Para funciones y como documentarlas con Alejandro Reyes
+
+``` r
 ## Para instalar paquetes de Bioconductor
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
-    
-## Para funciones y como documentarlas con Alejandro Reyes
 BiocManager::install("BiocStyle")
 
 remotes::install_cran(
@@ -201,7 +206,7 @@ remotes::install_cran(
 ```
 
 Para la segunda mitad del curso, necesitan instalar los siguientes
-paquetes de R (usando la versión más reciente de R)
+paquetes de R (usando la versión más reciente de R).
 
 ``` r
 ## Para instalar paquetes de Bioconductor
@@ -242,6 +247,13 @@ BiocManager::install(
     )
 )
 ```
+
+Favor de correr todo el código del siguiente [script de
+R](scRNAseq/02-data-infrastructure-and-import.R) para descargar todos
+los datos que usaremos para esta porción del curso. Se almacenaran
+automáticamente en tu computadora gracias a
+[`BiocFileCache`](https://bioconductor.org/packages/BiocFileCache) de
+tal forma que los podrás usar fácilmente en el futuro.
 
 ## Materiales
 
