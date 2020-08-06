@@ -322,7 +322,7 @@ head(sizeFactors(sce))
 
 ---
 
-# Ejercico con los datos de ERCC
+# Ejercicio con los datos de ERCC
 
 --
 
