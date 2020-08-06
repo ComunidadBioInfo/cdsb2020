@@ -242,7 +242,7 @@ DataFrame(
 
 --
 
-* ¿Fue necesario `qc.lib` para crear `discord`?
+* ¿Fue necesario `qc.lib` para crear `discard`?
 
 --
 

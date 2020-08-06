@@ -163,7 +163,7 @@ identical(zeisel_size_factors, lib.sf.zeisel)
 
 --
 
-* Checa el [código fuente](https://github.com/davismcc/scater/blob/master/R/librarySizeFactors.R)
+* Checa el [código fuente](https://github.com/LTLA/scuttle/blob/master/R/librarySizeFactors.R)
 
 ---
 
