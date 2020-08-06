@@ -97,7 +97,7 @@ identical(zeisel_size_factors, lib.sf.zeisel)
 
 
 ## ----all_code3, cache=TRUE, dependson='all_code2'-----------------------------------------
-# Normalización por circunvolución (convolution)
+# Normalización por decircunvolución (deconvolution)
 
 library('scran')
 # Pre-clustering

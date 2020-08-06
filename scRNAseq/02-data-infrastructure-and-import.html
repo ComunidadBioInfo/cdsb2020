@@ -4,7 +4,7 @@
     <title>Estructura e importe de datos</title>
     <meta charset="utf-8" />
     <meta name="author" content="Leonardo Collado-Torres" />
-    <meta name="date" content="2020-08-04" />
+    <meta name="date" content="2020-08-05" />
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-137796972-1"></script>
     <script>
@@ -23,7 +23,7 @@ class: center, middle, inverse, title-slide
 # <strong>Estructura e importe de datos</strong>
 ## <strong>Bioconductor</strong> para datos transcriptómicos de célula única (<strong>scRNA-seq</strong>) – <strong>CDSB2020</strong>
 ### <a href="http://lcolladotor.github.io/">Leonardo Collado-Torres</a>
-### 2020-08-04
+### 2020-08-05
 
 ---
 
@@ -173,6 +173,7 @@ pryr::object_size(sce)
 
 ```r
 # Accesa la matriz de cuenta del compartimento (slot) "assays" 
+# assays(sce, "counts")
 # OJO: ¡esto puede inundar tu sesión de R!
 
 # 1. El método general
@@ -648,7 +649,7 @@ pryr::object_size(sce)
 ```
 
 ```r
-# Ejemplo: obtén el subconjunto de células de tipo "wild type"
+# Ejemplo: obtén el subconjunto de células de fenotipo "wild type"
 # Acuérdate que las células son columnas del SCE
 sce[, sce$phenotype == "wild type phenotype"]
 ```
@@ -817,8 +818,8 @@ pryr::object_size(sce)
 ```r
 # Ejemplo: obtén el subconjunto de datos donde los genes están en el
 # cromosoma 3
-# NOTA: which() fue necesario para lidear con los nombres de cromosoma que son
-# NA
+# NOTA: which() fue necesario para lidear con los nombres de cromosoma
+# que son NA
 sce[which(rowData(sce)$chromosome == "3"), ]
 ```
 
@@ -899,12 +900,12 @@ reducedDim(sce, "PCA")[1:6, 1:3]
 
 ```
 ##                                             PC1        PC2       PC3
-## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1 -18.717668 -27.598132  5.939654
-## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1  -2.480705 -27.564583  4.916567
-## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1 -42.034018  -7.552435 12.126964
-## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1   8.494303  31.833727 15.760853
-## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1  49.737390   4.226795  6.123169
-## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1  44.528081  -3.215503 10.384939
+## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1  18.717668 -27.598132  5.939654
+## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1   2.480705 -27.564583  4.916567
+## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1  42.034018  -7.552435 12.126964
+## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1  -8.494303  31.833727 15.760853
+## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1 -49.737390   4.226795  6.123169
+## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1 -44.528081  -3.215503 10.384939
 ```
 
 ```r
@@ -938,13 +939,13 @@ head(reducedDim(sce, "TSNE"))
 ```
 
 ```
-##                                            [,1]      [,2]
-## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1  5.7709901  2.894348
-## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1 -0.7696283  1.759943
-## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1  6.3715234  4.444638
-## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1  4.5001480 -0.697168
-## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1 -5.6695234 -6.797328
-## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1 -6.9533606 -6.374509
+##                                            [,1]       [,2]
+## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1  3.6325953 -3.1664239
+## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1  0.7872262 -1.9856767
+## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1  7.9233587  1.4333125
+## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1  2.7673456  4.0043258
+## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1 -8.7769468  0.4735364
+## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1 -8.8302294  2.1605382
 ```
 
 ```r
@@ -961,13 +962,13 @@ head(reducedDim(sce, "UMAP"))
 ```
 
 ```
-##                                            [,1]      [,2]
-## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1 -0.8775856 -3.353889
-## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1 -0.6025560 -1.917092
-## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1 -1.2132465 -3.298013
-## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1  0.8394168 -1.990511
-## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1  1.7126780 -1.390049
-## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1  1.1901539 -1.794322
+##                                             [,1]      [,2]
+## SLX-9555.N701_S502.C89V9ANXX.s_1.r_1 -3.08790954 -1.790366
+## SLX-9555.N701_S503.C89V9ANXX.s_1.r_1 -1.83529409 -1.405215
+## SLX-9555.N701_S504.C89V9ANXX.s_1.r_1 -3.18092569 -1.682470
+## SLX-9555.N701_S505.C89V9ANXX.s_1.r_1 -0.56800970 -1.440291
+## SLX-9555.N701_S506.C89V9ANXX.s_1.r_1  0.02311221 -1.839899
+## SLX-9555.N701_S507.C89V9ANXX.s_1.r_1 -0.17816242 -1.628937
 ```
 
 ```r
@@ -1123,11 +1124,11 @@ head(sizeFactors(sce))
 
 --
 
-* ¿Qué función define el la clase de objeto `sce`?
+* ¿Qué función define la clase del objeto `sce`?
 
 --
 
-* ¿Cuáles son los tipos de columnas debe siempre contenter el objeto `sce`?
+* ¿Cuáles son los tipos de columnas que debe siempre contenter el objeto `sce`?
 
 --
 
@@ -1227,7 +1228,7 @@ for (i in seq_len(2)) {
 
 
 ```r
-# Descarga datos de ejemplo procesados con CellRanges
+# Descarga datos de ejemplo procesados con CellRanger
 # Paréntesis: al usar BiocFileCache solo tenemos que descargar
 #             los datos una vez.
 library('BiocFileCache')
@@ -1342,27 +1343,6 @@ list.files(sis_seq.dir)
 ```r
 # Importa los datos como un objeto de tipo SingleCellExperiment
 library('scPipe')
-```
-
-```
-## Loading required package: ggplot2
-```
-
-```
-## 
-```
-
-```
-## 
-```
-
-```
-## Registered S3 method overwritten by 'GGally':
-##   method from   
-##   +.gg   ggplot2
-```
-
-```r
 sce.sis_seq &lt;- create_sce_by_dir(sis_seq.dir)
 ```
 
@@ -1542,7 +1522,7 @@ sessioninfo::session_info()
 ##  collate  en_US.UTF-8                 
 ##  ctype    en_US.UTF-8                 
 ##  tz       America/New_York            
-##  date     2020-08-04                  
+##  date     2020-08-05                  
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  package                * version  date       lib source                            
@@ -1693,6 +1673,7 @@ sessioninfo::session_info()
 ##  zlibbioc                 1.34.0   2020-04-27 [1] Bioconductor                      
 ## 
 ## [1] /Library/Frameworks/R.framework/Versions/4.0/Resources/library
+## [2] /Library/Frameworks/R.framework/Versions/4.0branch/Resources/library
 ```
 
 

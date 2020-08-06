@@ -282,14 +282,14 @@ legend(
 set.seed(100)
 e.out <- emptyDrops(counts(sce.pbmc))
 
-# Revisa ?emptyDrops para una explicación de porqué hay valores NA
+# Revisa ?emptyDrops para una explicación de porque hay valores NA
 summary(e.out$FDR <= 0.001)
 
 set.seed(100)
 limit <- 100
 all.out <-
     emptyDrops(counts(sce.pbmc), lower = limit, test.ambient = TRUE)
-# Idealmente, este histograma ddebería verse uniforme.
+# Idealmente, este histograma debería verse uniforme.
 # Picos grandes cerca de cero indican que los _barcodes_
 # con un número total de cuentas menor a "lower" no son
 # de origen ambiental.

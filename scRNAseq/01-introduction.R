@@ -88,7 +88,8 @@ solarized_dark(
 ##         'iSEE',
 ##         'pryr',
 ##         'spatialLIBD',
-##         'sessioninfo'
+##         'sessioninfo',
+##         'scPipe'
 ##     )
 ## )
 
@@ -121,9 +122,11 @@ solarized_dark(
 ## ## Crea el repositorio de Git
 ## usethis::use_git()
 ## 
-## ## Utiliza GitHub
+## ## Configura tu conexión a GitHub de ser necesario
 ## usethis::browse_github_token()
 ## usethis::edit_r_environ() ## y después reinicia R
+## 
+## ## Utiliza GitHub
 ## usethis::use_github() ## crea un commit, luego corre este comando
 ## 
 ## ## Empieza tus notas sobre la introducción a scRNA-seq

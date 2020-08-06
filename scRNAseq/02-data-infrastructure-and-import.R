@@ -72,6 +72,7 @@ sce
 pryr::object_size(sce)
 
 # Accesa la matriz de cuenta del compartimento (slot) "assays" 
+# assays(sce, "counts")
 # OJO: ¡esto puede inundar tu sesión de R!
 
 # 1. El método general
@@ -129,7 +130,7 @@ sce <- scater::logNormCounts(sce)
 ## ¿Qué tan grande es el objeto de R?
 pryr::object_size(sce)
 
-# Ejemplo: obtén el subconjunto de células de tipo "wild type"
+# Ejemplo: obtén el subconjunto de células de fenotipo "wild type"
 # Acuérdate que las células son columnas del SCE
 sce[, sce$phenotype == "wild type phenotype"]
 
@@ -167,8 +168,8 @@ pryr::object_size(sce)
 
 # Ejemplo: obtén el subconjunto de datos donde los genes están en el
 # cromosoma 3
-# NOTA: which() fue necesario para lidear con los nombres de cromosoma que son
-# NA
+# NOTA: which() fue necesario para lidear con los nombres de cromosoma
+# que son NA
 sce[which(rowData(sce)$chromosome == "3"), ]
 
 # Accesa la información de nuestro experimento usando metadata()
@@ -290,7 +291,7 @@ for (i in seq_len(2)) {
 
 
 ## ----all_code_part2, cache=TRUE-----------------------------------------------------------
-# Descarga datos de ejemplo procesados con CellRanges
+# Descarga datos de ejemplo procesados con CellRanger
 # Paréntesis: al usar BiocFileCache solo tenemos que descargar
 #             los datos una vez.
 library('BiocFileCache')

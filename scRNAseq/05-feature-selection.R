@@ -152,7 +152,7 @@ sce.416b <- logNormCounts(sce.416b)
 
 dec.pbmc <- modelGeneVar(sce.pbmc)
 
-# Visualizemos la relación entre la media y la varianza
+# Visualicemos la relación entre la media y la varianza
 fit.pbmc <- metadata(dec.pbmc)
 plot(fit.pbmc$mean, fit.pbmc$var,
     xlab = "Mean of log-expression",
@@ -275,8 +275,8 @@ hvg.416b.var.3 <- getTopHVGs(dec.spike.416b,
     var.threshold = 0)
 str(hvg.416b.var.3)
 
-# O utiliza modelGeneCV2() al especificar `var.field` and
-# value of `var.threshold`
+# O utiliza modelGeneCV2() al especificar `var.field` y
+# el valor de `var.threshold`
 hvg.pbmc.cv2.3 <- getTopHVGs(dec.cv2.pbmc,
     var.field = "ratio", var.threshold = 1)
 str(hvg.pbmc.cv2.2)

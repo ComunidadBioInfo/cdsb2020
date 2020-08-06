@@ -124,7 +124,7 @@ Día 5
 | 09:00-10:00 | [Selección de genes](scRNAseq/05-feature-selection.html) | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 10:00-11:00 | [Reducción de dimensiones](scRNAseq/06-dimensionality-reduction.html) | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 11:00-11:30 | Descanso | |
-| 11:30-12:00 | [Clustering](scRNAseq/07-clustering.html) y [detección de genes diferencialmente expresados](scRNAseq/08-marker-gene-detection.html) | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
+| 11:30-12:00 | [Clustering](scRNAseq/07-clustering.html) e [identificación de genes marcadores](scRNAseq/08-marker-gene-detection.html) | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 12:00-12:30 | Evaluación del taller |  |
 | 12:30-13:30 | [Clustering](scRNAseq/07-clustering.html) e [identificación de genes marcadores](scRNAseq/08-marker-gene-detection.html) | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |
 | 13:30-14:15 | [Spatial Transcriptomics: análisis de datos de la plataforma Visium de 10x Genomics con `spatialLIBD`](scRNAseq/12-spatial-transcriptomics.html) | [Leonardo Collado-Torres](http://comunidadbioinfo.github.io/authors/lcollado/) |

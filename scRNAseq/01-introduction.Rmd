@@ -163,7 +163,8 @@ BiocManager::install(
         'iSEE',
         'pryr',
         'spatialLIBD',
-        'sessioninfo'
+        'sessioninfo',
+        'scPipe'
     )
 )
 ```
@@ -203,7 +204,7 @@ Tabmién debes instalar [RStudio](https://rstudio.com/products/rstudio/download/
 
 --
 
-* **Clone** el repositorio de GitHub, lo cual te hará más fácil el poder actualizar tus archivos con la versión más reciente usando *git pull*
+* **Clona** el repositorio de GitHub, lo cual te hará más fácil el poder actualizar tus archivos con la versión más reciente usando *git pull*
 
 ```{bash clone_course, eval = FALSE}
 ## Si tienes las llaves de SSH configuradas
@@ -243,9 +244,11 @@ En este script de setup, guarda los siguientes comandos
 ## Crea el repositorio de Git
 usethis::use_git()
 
-## Utiliza GitHub
+## Configura tu conexión a GitHub de ser necesario
 usethis::browse_github_token()
 usethis::edit_r_environ() ## y después reinicia R
+
+## Utiliza GitHub
 usethis::use_github() ## crea un commit, luego corre este comando
 
 ## Empieza tus notas sobre la introducción a scRNA-seq

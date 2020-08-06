@@ -519,7 +519,7 @@ sce.416b &lt;- logNormCounts(sce.416b)
 
 dec.pbmc &lt;- modelGeneVar(sce.pbmc)
 
-# Visualizemos la relación entre la media y la varianza
+# Visualicemos la relación entre la media y la varianza
 fit.pbmc &lt;- metadata(dec.pbmc)
 plot(fit.pbmc$mean, fit.pbmc$var,
     xlab = "Mean of log-expression",
@@ -966,8 +966,8 @@ str(hvg.416b.var.3)
 ```
 
 ```r
-# O utiliza modelGeneCV2() al especificar `var.field` and
-# value of `var.threshold`
+# O utiliza modelGeneCV2() al especificar `var.field` y
+# el valor de `var.threshold`
 hvg.pbmc.cv2.3 &lt;- getTopHVGs(dec.cv2.pbmc,
     var.field = "ratio", var.threshold = 1)
 str(hvg.pbmc.cv2.2)
@@ -1251,6 +1251,7 @@ sessioninfo::session_info()
 ##  rmarkdown                2.3      2020-06-18 [1] CRAN (R 4.0.0)                    
 ##  Rsamtools                2.4.0    2020-04-27 [1] Bioconductor                      
 ##  RSQLite                  2.2.0    2020-01-07 [1] CRAN (R 4.0.0)                    
+##  rstudioapi               0.11     2020-02-07 [1] CRAN (R 4.0.0)                    
 ##  rsvd                     1.0.3    2020-02-17 [1] CRAN (R 4.0.0)                    
 ##  rtracklayer              1.48.0   2020-04-27 [1] Bioconductor                      
 ##  S4Vectors              * 0.26.1   2020-05-16 [1] Bioconductor                      
